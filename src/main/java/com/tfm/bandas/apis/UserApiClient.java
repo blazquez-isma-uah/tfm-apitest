@@ -57,7 +57,6 @@ public class UserApiClient {
     public String createUser(String jsonBody) throws IOException, InterruptedException {
         HttpRequest request = baseRequest(usersHost + "/api/users")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-        System.out.println("Body de la request: " + jsonBody);
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 

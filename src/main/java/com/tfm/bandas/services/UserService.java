@@ -18,7 +18,7 @@ public class UserService {
 
     // ==================== USERS ====================
 
-    public String getAllUsers(int page, int size, String sort) throws Exception {
+    public String getAllUsers(Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "page", String.valueOf(page));
         putIfNotBlank(params, "size", String.valueOf(size));
@@ -124,7 +124,7 @@ public class UserService {
     }
 
     public String searchUsers(String firstName, String lastName, String email, boolean active, String instrumentId,
-                              int page, int size, String sort) throws Exception {
+                              Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "firstName", firstName);
         putIfNotBlank(params, "lastName", lastName);
@@ -144,7 +144,7 @@ public class UserService {
 
     // ==================== INSTRUMENTS ====================
 
-    public String getAllInstruments(int page, int size, String sort) throws Exception {
+    public String getAllInstruments(Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "page", String.valueOf(page));
         putIfNotBlank(params, "size", String.valueOf(size));
@@ -170,7 +170,7 @@ public class UserService {
         return client.deleteInstrument(id);
     }
 
-    public String searchInstruments(String instrumentName, String voice, int page, int size, String sort) throws Exception {
+    public String searchInstruments(String instrumentName, String voice, Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "firstName", instrumentName);
         putIfNotBlank(params, "lastName", voice);

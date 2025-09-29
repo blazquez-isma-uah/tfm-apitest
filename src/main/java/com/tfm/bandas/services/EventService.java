@@ -60,7 +60,7 @@ public class EventService {
         return client.getEventById(id);
     }
 
-    public String listEvents(String from, String to, int page, int size, String sort) throws Exception {
+    public String listEvents(String from, String to, Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "from", from);
         putIfNotBlank(params, "to", to);
@@ -70,7 +70,7 @@ public class EventService {
         return client.listEvents(buildQuery(params));
     }
 
-    public String listPastEvents(String before, int page, int size, String sort) throws Exception {
+    public String listPastEvents(String before, Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "before", before);
         params.put("page", String.valueOf(page));
@@ -79,7 +79,7 @@ public class EventService {
         return client.listPastEvents(buildQuery(params));
     }
 
-    public String privateCalendar(String from, String to, String tz, int page, int size, String sort) throws Exception {
+    public String privateCalendar(String from, String to, String tz, Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "from", from);
         putIfNotBlank(params, "to", to);
@@ -92,7 +92,7 @@ public class EventService {
 
     public String searchEvents(String qText, String title, String description, String location,
                                String timeZone, String type, String status, String visibility,
-                               int page, int size, String sort) throws Exception {
+                               Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "q", qText);
         putIfNotBlank(params, "title", title);
@@ -112,7 +112,7 @@ public class EventService {
         return client.getScores(eventId);
     }
 
-    public String publicCalendar(String from, String to, String tz, int page, int size, String sort) throws Exception {
+    public String publicCalendar(String from, String to, String tz, Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "from", from);
         putIfNotBlank(params, "to", to);
