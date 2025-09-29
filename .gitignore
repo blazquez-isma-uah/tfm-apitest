@@ -36,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+src/main/resources/password_token.json
+src/main/resources/credential_token.json
