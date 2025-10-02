@@ -1,15 +1,11 @@
 package com.tfm.bandas;
 
 import com.tfm.bandas.apis.EventApiClient;
-import com.tfm.bandas.apis.KeycloakApiClient;
 import com.tfm.bandas.services.EventService;
 
+import static com.tfm.bandas.Utils.*;
+
 public class MainEventos {
-    private static String KEYCLOAK_HOST = "http://localhost:8080";
-    private static String REALM = "tfm-bandas";
-    private static String EVENTS_HOST = "http://localhost:8083";
-    private static String USERNAME = "admin";
-    private static String PASSWORD = "admin123";
 
     public static void main(String[] args) {
         try {
@@ -52,17 +48,6 @@ public class MainEventos {
             System.out.println("Respuesta:\n" + prettyPrintJson(res));
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-
-    public static String prettyPrintJson(String json) {
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            Object obj = mapper.readValue(json, Object.class);
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-        } catch (Exception e) {
-            return json;
         }
     }
 }

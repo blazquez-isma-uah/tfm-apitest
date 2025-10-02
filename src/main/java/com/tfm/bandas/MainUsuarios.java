@@ -6,26 +6,15 @@ import com.tfm.bandas.services.KeycloakService;
 import com.tfm.bandas.services.UserService;
 
 import java.text.Normalizer;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-public class MainUsuarios {
-    private static final String KEYCLOAK_HOST = "http://localhost:8080";
-    private static final String REALM = "tfm-bandas";
-    private static final String USERS_HOST = "http://localhost:8081";
-    private static final String USERNAME = "adminbandas";
-    private static final String PASSWORD = "admin123";
-    private static final String CLIENT_ID = "realm-admin";
-    private static final String CLIENT_SECRET = "8nWwBGuo0RxdRQfHUaQgcqv7Fibt8JYX";
+import static com.tfm.bandas.Utils.*;
 
+public class MainUsuarios {
     static KeycloakService keycloakService = new KeycloakService(new KeycloakApiClient(KEYCLOAK_HOST, REALM, CLIENT_ID, CLIENT_SECRET));
     static UserService userService = new UserService(new UserApiClient(USERS_HOST, KEYCLOAK_HOST, REALM, USERNAME, PASSWORD));
-
-    // ---------- NUEVO: generador de datos ----------
-    private static final Random RAND = new Random();
 
     private static final List<String> NOMBRES = List.of(
             "Alejandro","María","José","Lucía","Pablo","Laura","David","Ana","Sergio","Marta",
@@ -85,8 +74,13 @@ public class MainUsuarios {
 //            System.out.println("\nUsuarios en el sistema: \n" + prettyPrintJson(allUsers));
 
             // Get usuario
-            String username = "ahernandezm";
-            getUserInfo(username);
+//            String username = "ahernandezm";
+//            getUserInfo(username);
+
+            // Buscar usuarios
+            String search = userService.searchUsers(null, null, null, null, 17L,
+                    null, null, null);
+            System.out.println("\nUsuarios encontrados: \n" + prettyPrintJson(search));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -222,7 +216,12 @@ public class MainUsuarios {
     }
 
     // Genera `count` usuarios y los crea con crearUsuarioCompleto
-    private static void generarUsuariosDePrueba(int count, String emailDomain, List<String> roles) throws Exception {
+    private static void generateTestUsers(int count, String emailDomain, List<String> roles) throws Exception {
+        // Si no hay instrumentos en el sistema, los carga
+        if (INSTRUMENTOS_CATALOGO.isEmpty()) {
+            loadInstrumentCatalog();
+        }
+
         Set<String> usados = new HashSet<>();
         for (int i = 0; i < count; i++) {
             String firstName = pick(NOMBRES);
@@ -240,11 +239,12 @@ public class MainUsuarios {
             String phone = randomPhoneEs();
             String notes = "Usuario de prueba generado el " + LocalDate.now();
             String profilePictureUrl = "https://picsum.photos/seed/" + username + "/200/200";
-            List<String> instrumentIds = pickRandomInstruments(1 + RAND.nextInt(3)); // 1-3 instrumentos
+
+            List<String> instrumentIds = pickRandomInstruments(3, INSTRUMENTOS_CATALOGO);
 
             System.out.println("--------------------------------------------------------------");
             System.out.println("CREANDO USUARIO: " + username);
-            crearUsuarioCompleto(
+            createCompleteUser(
                     username,
                     firstName,
                     lastName,
@@ -269,7 +269,6 @@ public class MainUsuarios {
         int size = 10; // tamaño de página razonable
         boolean last;
         INSTRUMENTOS_CATALOGO.clear();
-
         do {
             String resp = userService.getAllInstruments(page, size, null);
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
@@ -287,67 +286,12 @@ public class MainUsuarios {
             last = root.path("last").asBoolean(false);
             page++;
         } while (!last);
-
         System.out.println("Catálogo de instrumentos cargado (" + INSTRUMENTOS_CATALOGO.size() + "): " + INSTRUMENTOS_CATALOGO);
     }
 
-    private static String pick(List<String> list) { return list.get(RAND.nextInt(list.size())); }
-
-    private static String pickDistinct(List<String> list, String notThis) {
-        String v;
-        do { v = pick(list); } while (v.equals(notThis));
-        return v;
-    }
-
-    // username: inicial nombre + apellido1 + inicial apellido2, normalizado y en minúsculas
-    private static String buildUsernameBase(String firstName, String lastName, String secondLastName) {
-        String base = firstName.charAt(0) + normalize(lastName) + (secondLastName.isEmpty() ? "" : String.valueOf(normalize(secondLastName).charAt(0)));
-        return normalize(base).toLowerCase(Locale.ROOT);
-    }
-
-    private static String ensureUnique(String base, Set<String> usados) {
-        String u = base;
-        int n = 1;
-        while (!usados.add(u)) {
-            n++;
-            u = base + n;
-        }
-        return u;
-    }
-
-    private static String normalize(String s) {
-        // quita tildes
-        return Normalizer.normalize(s, Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "") // quita tildes
-                .replace('ñ', 'n').replace('Ñ', 'N')
-                .replaceAll("[^A-Za-z0-9]", "");
-    }
-
-    private static LocalDate randomDateBetween(LocalDate start, LocalDate end) {
-        if (end.isBefore(start)) end = start;
-        long days = ChronoUnit.DAYS.between(start, end);
-        long add = days > 0 ? RAND.nextLong(days + 1) : 0;
-        return start.plusDays(add);
-    }
-
-    private static String randomPhoneEs() {
-        int first = RAND.nextBoolean() ? 6 : 7; // móvil ES
-        int rest = 10000000 + RAND.nextInt(90000000);
-        return first + String.valueOf(rest);
-    }
-
-    private static List<String> pickRandomInstruments(int count) throws Exception {
-        if (INSTRUMENTOS_CATALOGO.isEmpty()) {
-            loadInstrumentCatalog();
-        }
-        List<String> copy = new ArrayList<>(INSTRUMENTOS_CATALOGO);
-        Collections.shuffle(copy, RAND);
-        return new ArrayList<>(copy.subList(0, Math.min(count, copy.size())));
-    }
-
-    private static void crearUsuarioCompleto(String username, String firstName, String lastName, String secondLastName, String email, String password,
-                                             String birthDate, String bandJoinDate, String phone, String notes, String profilePictureUrl,
-                                             List<String> instrumentIds, List<String> roles) throws Exception {
+    private static void createCompleteUser(String username, String firstName, String lastName, String secondLastName, String email, String password,
+                                           String birthDate, String bandJoinDate, String phone, String notes, String profilePictureUrl,
+                                           List<String> instrumentIds, List<String> roles) throws Exception {
         // Comprueba si el usuario ya existe en Keycloak
         String existingUserResp = keycloakService.getUserInfoByUsername(username);
         String existingId = extractFromResponse(existingUserResp, "id");
@@ -382,82 +326,5 @@ public class MainUsuarios {
         String createUserResp = userService.createUser(iamId, username, firstName, lastName, secondLastName, email,
                 birthToSend, bandJoinToSend, systemSignupDate.toString(), phone, notes, profilePictureUrl, instrumentIds);
         System.out.println("\nUsuario " + username + " creado en el sistema: \n" + prettyPrintJson(createUserResp));
-    }
-
-    private static LocalDate stringTimestampToLocalDate(String createdTimestampStr) {
-        LocalDate systemSignupDate = null;
-        if (createdTimestampStr != null && !createdTimestampStr.isEmpty()) {
-            long createdTimestamp = Long.parseLong(createdTimestampStr);
-            systemSignupDate = Instant.ofEpochMilli(createdTimestamp)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-        }
-        if(systemSignupDate == null) {
-            systemSignupDate = LocalDate.now();
-        }
-        return systemSignupDate;
-    }
-
-    private static String extractFromResponse(String userResp, String field) {
-        // Suponiendo que la respuesta es un JSON
-        // Si es un array, se toma el primer elemento
-        // Y si es un objeto dentro de otro se nombra con punto (.) Ej: "address.street"
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            if (userResp.trim().startsWith("[")) {
-                // Es un array
-                List<?> list = mapper.readValue(userResp, List.class);
-                if (list.isEmpty()) return null;
-                Object firstElem = list.getFirst();
-                String json = mapper.writeValueAsString(firstElem);
-                return mapper.readTree(json).path(field).asText();
-            } else {
-                // Es un objeto
-                return mapper.readTree(userResp).path(field).asText();
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static String prettyPrintJson(String json) {
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            Object obj = mapper.readValue(json, Object.class);
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-        } catch (Exception e) {
-            return json;
-        }
-    }
-
-    private static String normalizeIsoDate(String date) {
-        if (date == null) return null;
-        String s = date.trim();
-        // Ya en ISO
-        try { java.time.LocalDate.parse(s, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE); return s; }
-        catch (Exception ignored) {}
-
-        String[] patterns = {
-                "dd-MM-uuuu", "dd/MM/uuuu", "dd.MM.uuuu",
-                "uuuu/MM/dd", "uuuu.MM.dd", "ddMMyyyy", "uuuuMMdd"
-        };
-        for (String p : patterns) {
-            try {
-                java.time.format.DateTimeFormatter f =
-                        java.time.format.DateTimeFormatter.ofPattern(p)
-                                .withResolverStyle(java.time.format.ResolverStyle.SMART);
-                java.time.LocalDate ld = java.time.LocalDate.parse(s, f);
-                return ld.toString(); // ISO yyyy-MM-dd
-            } catch (Exception ignored) {}
-        }
-        return null;
-    }
-
-    private static String requireIsoDate(String input, String fieldName) {
-        String iso = normalizeIsoDate(input);
-        if (iso == null) {
-            throw new IllegalArgumentException("Formato de fecha inválido para " + fieldName + ": " + input + " (use yyyy-MM-dd).");
-        }
-        return iso;
     }
 }

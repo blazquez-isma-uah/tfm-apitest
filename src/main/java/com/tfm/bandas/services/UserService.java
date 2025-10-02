@@ -2,11 +2,11 @@ package com.tfm.bandas.services;
 
 import com.tfm.bandas.apis.UserApiClient;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.tfm.bandas.Utils.*;
 
 public class UserService {
 
@@ -123,14 +123,14 @@ public class UserService {
         return client.assignInstruments(id, sb.toString());
     }
 
-    public String searchUsers(String firstName, String lastName, String email, boolean active, String instrumentId,
+    public String searchUsers(String firstName, String lastName, String email, Boolean active, Long instrumentId,
                               Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "firstName", firstName);
         putIfNotBlank(params, "lastName", lastName);
         putIfNotBlank(params, "email", email);
         putIfNotBlank(params, "active", String.valueOf(active));
-        putIfNotBlank(params, "instrumentId", instrumentId);
+        putIfNotBlank(params, "instrumentId", String.valueOf(instrumentId));
         putIfNotBlank(params, "page", String.valueOf(page));
         putIfNotBlank(params, "size", String.valueOf(size));
         putIfNotBlank(params, "sort", sort);
@@ -172,35 +172,12 @@ public class UserService {
 
     public String searchInstruments(String instrumentName, String voice, Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
-        putIfNotBlank(params, "firstName", instrumentName);
-        putIfNotBlank(params, "lastName", voice);
+        putIfNotBlank(params, "instrumentName", instrumentName);
+        putIfNotBlank(params, "voice", voice);
         putIfNotBlank(params, "page", String.valueOf(page));
         putIfNotBlank(params, "size", String.valueOf(size));
         putIfNotBlank(params, "sort", sort);
         return client.searchInstruments(buildQuery(params));
     }
 
-
-    // ==================== Helpers de query ====================
-    private static void putIfNotBlank(Map<String, String> params, String key, String value) {
-        if (value != null && !value.isBlank()) {
-            params.put(key, value);
-        }
-    }
-
-    private static String buildQuery(Map<String, String> params) {
-        if (params.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder("?");
-        boolean first = true;
-        for (Map.Entry<String, String> e : params.entrySet()) {
-            if (!first) sb.append("&");
-            sb.append(encode(e.getKey())).append("=").append(encode(e.getValue()));
-            first = false;
-        }
-        return sb.toString();
-    }
-
-    private static String encode(String s) {
-        return URLEncoder.encode(s, StandardCharsets.UTF_8);
-    }
 }

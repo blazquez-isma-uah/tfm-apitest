@@ -2,10 +2,10 @@ package com.tfm.bandas.services;
 
 import com.tfm.bandas.apis.EventApiClient;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.tfm.bandas.Utils.*;
 
 public class EventService {
     private final EventApiClient client;
@@ -64,8 +64,8 @@ public class EventService {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "from", from);
         putIfNotBlank(params, "to", to);
-        params.put("page", String.valueOf(page));
-        params.put("size", String.valueOf(size));
+        putIfNotBlank(params,"page", String.valueOf(page));
+        putIfNotBlank(params, "size", String.valueOf(size));
         putIfNotBlank(params, "sort", sort);
         return client.listEvents(buildQuery(params));
     }
@@ -73,8 +73,8 @@ public class EventService {
     public String listPastEvents(String before, Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "before", before);
-        params.put("page", String.valueOf(page));
-        params.put("size", String.valueOf(size));
+        putIfNotBlank(params, "page", String.valueOf(page));
+        putIfNotBlank(params, "size", String.valueOf(size));
         putIfNotBlank(params, "sort", sort);
         return client.listPastEvents(buildQuery(params));
     }
@@ -84,8 +84,8 @@ public class EventService {
         putIfNotBlank(params, "from", from);
         putIfNotBlank(params, "to", to);
         putIfNotBlank(params, "tz", tz);
-        params.put("page", String.valueOf(page));
-        params.put("size", String.valueOf(size));
+        putIfNotBlank(params, "page", String.valueOf(page));
+        putIfNotBlank(params, "size", String.valueOf(size));
         putIfNotBlank(params, "sort", sort);
         return client.privateCalendar(buildQuery(params));
     }
@@ -102,8 +102,8 @@ public class EventService {
         putIfNotBlank(params, "type", type);
         putIfNotBlank(params, "status", status);
         putIfNotBlank(params, "visibility", visibility);
-        params.put("page", String.valueOf(page));
-        params.put("size", String.valueOf(size));
+        putIfNotBlank(params, "page", String.valueOf(page));
+        putIfNotBlank(params, "size", String.valueOf(size));
         putIfNotBlank(params, "sort", sort);
         return client.searchEvents(buildQuery(params));
     }
@@ -117,32 +117,9 @@ public class EventService {
         putIfNotBlank(params, "from", from);
         putIfNotBlank(params, "to", to);
         putIfNotBlank(params, "tz", tz);
-        params.put("page", String.valueOf(page));
-        params.put("size", String.valueOf(size));
+        putIfNotBlank(params, "page", String.valueOf(page));
+        putIfNotBlank(params, "size", String.valueOf(size));
         putIfNotBlank(params, "sort", sort);
         return client.publicCalendar(buildQuery(params));
-    }
-
-    // ==================== Helpers de query ====================
-    private static void putIfNotBlank(Map<String, String> params, String key, String value) {
-        if (value != null && !value.isBlank()) {
-            params.put(key, value);
-        }
-    }
-
-    private static String buildQuery(Map<String, String> params) {
-        if (params.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder("?");
-        boolean first = true;
-        for (Map.Entry<String, String> e : params.entrySet()) {
-            if (!first) sb.append("&");
-            sb.append(encode(e.getKey())).append("=").append(encode(e.getValue()));
-            first = false;
-        }
-        return sb.toString();
-    }
-
-    private static String encode(String s) {
-        return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 }
