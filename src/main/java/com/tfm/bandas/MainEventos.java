@@ -9,7 +9,7 @@ public class MainEventos {
 
     public static void main(String[] args) {
         try {
-            EventService eventsService = new EventService(new EventApiClient(KEYCLOAK_HOST, REALM, EVENTS_HOST, USERNAME, PASSWORD));
+            EventService eventsService = new EventService(new EventApiClient(KEYCLOAK_HOST, REALM, EVENTS_HOST, ADMIN_USERNAME, ADMIN_PASSWORD));
 
             String res ="";
 

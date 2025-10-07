@@ -5,16 +5,14 @@ import com.tfm.bandas.apis.UserApiClient;
 import com.tfm.bandas.services.KeycloakService;
 import com.tfm.bandas.services.UserService;
 
-import java.text.Normalizer;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static com.tfm.bandas.Utils.*;
 
 public class MainUsuarios {
     static KeycloakService keycloakService = new KeycloakService(new KeycloakApiClient(KEYCLOAK_HOST, REALM, CLIENT_ID, CLIENT_SECRET));
-    static UserService userService = new UserService(new UserApiClient(USERS_HOST, KEYCLOAK_HOST, REALM, USERNAME, PASSWORD));
+    static UserService userService = new UserService(new UserApiClient(USERS_HOST, KEYCLOAK_HOST, REALM, ADMIN_USERNAME, ADMIN_PASSWORD));
 
     private static final List<String> NOMBRES = List.of(
             "Alejandro","María","José","Lucía","Pablo","Laura","David","Ana","Sergio","Marta",

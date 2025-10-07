@@ -18,7 +18,7 @@ public class MainInstrumentos {
             "Principal", "1", "2", "3"
     );
 
-    static UserService userService = new UserService(new UserApiClient(USERS_HOST, KEYCLOAK_HOST, REALM, USERNAME, PASSWORD));
+    static UserService userService = new UserService(new UserApiClient(USERS_HOST, KEYCLOAK_HOST, REALM, ADMIN_USERNAME, ADMIN_PASSWORD));
 
     public static void main(String[] args) {
         try {

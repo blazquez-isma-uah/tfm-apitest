@@ -16,11 +16,13 @@ import java.util.*;
 public class Utils {
 
     public static final String KEYCLOAK_HOST = "http://localhost:8080";
-    public static final String USERS_HOST = "http://localhost:8081";
-    public static final String EVENTS_HOST = "http://localhost:8083";
+    public static final String USERS_HOST = "http://localhost:8085";
+    public static final String EVENTS_HOST = "http://localhost:8085";
     public static final String REALM = "tfm-bandas";
-    public static final String USERNAME = "adminbandas";
-    public static final String PASSWORD = "admin123";
+    public static final String ADMIN_USERNAME = "adminbandas";
+    public static final String ADMIN_PASSWORD = "admin123";
+    public static final String MUSICIAN_USERNAME = "sserranoa";
+    public static final String MUSICIAN_PASSWORD = "123456";
     public static final String CLIENT_ID = "realm-admin";
     public static final String CLIENT_SECRET = "8nWwBGuo0RxdRQfHUaQgcqv7Fibt8JYX";
 
