@@ -38,9 +38,10 @@ public class UserService {
         return client.getUserByIamId(iamId);
     }
 
-    public String createUser(String iamId, String username, String firstName, String lastName, String secondLastName,
-                             String email, String birthDate, String bandJoinDate, String systemSignupDate,
+    public String createUser(String email, String username, String password, String firstName, String lastName, String role,
+                             String secondLastName, String birthDate, String bandJoinDate, String systemSignupDate,
                              String phone, String notes, String profilePictureUrl, List<String> instrumentIds) throws Exception {
+
         StringBuilder instrumentsJson = new StringBuilder("[");
         for (int i = 0; i < instrumentIds.size(); i++) {
             instrumentsJson.append(instrumentIds.get(i));
@@ -50,12 +51,13 @@ public class UserService {
 
         String jsonBody = String.format("""
         {
-          "iamId": "%s",
+          "email": "%s",
           "username": "%s",
+          "password": "%s",
           "firstName": "%s",
           "lastName": "%s",
+          "role": "%s",
           "secondLastName": "%s",
-          "email": "%s",
           "birthDate": "%s",
           "bandJoinDate": "%s",
           "systemSignupDate": "%s",
@@ -64,8 +66,9 @@ public class UserService {
           "profilePictureUrl": "%s",
           "instrumentIds": %s
         }
-        """, iamId, username, firstName, lastName, secondLastName, email, birthDate, bandJoinDate,
-                systemSignupDate, phone, notes, profilePictureUrl, instrumentsJson);
+        """, email, username, password, firstName, lastName, role, secondLastName,
+                requireIsoDate(birthDate, "birthDate"), requireIsoDate(bandJoinDate, "bandJoinDate"),
+                requireIsoDate(systemSignupDate, "systemSignupDate"), phone, notes, profilePictureUrl, instrumentsJson);
         return client.createUser(jsonBody);
     }
 
@@ -136,6 +139,10 @@ public class UserService {
         putIfNotBlank(params, "sort", sort);
 
         return client.searchUsers(buildQuery(params));
+    }
+
+    public String testAuth() throws Exception {
+        return client.testAuth();
     }
 
     public String getMyProfile() throws Exception {

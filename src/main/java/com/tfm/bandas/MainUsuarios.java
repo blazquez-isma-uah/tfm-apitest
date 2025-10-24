@@ -54,6 +54,24 @@ public class MainUsuarios {
 //                    List.of("ADMIN")
 //            );
 
+            String resp = userService.createUser(
+                    "pruebauser@bandas.com",
+                    "pruebauser",
+                    "123456",
+                    "Usuario",
+                    "Prueba",
+                    "MUSICIAN",
+                    "Test",
+                    "2000-01-01",
+                    "2015-06-15",
+                    LocalDate.now().toString(),
+                    "666666666",
+                    "Usuario de prueba creado desde MainUsuarios",
+                    "",
+                    List.of("11","12")
+            );
+            System.out.println("\nUsuario de prueba creado: \n" + prettyPrintJson(resp));
+
             // Borrar Usuario
 //            String username = "pruebauser";
 //            deleteUser(username);
@@ -76,9 +94,12 @@ public class MainUsuarios {
 //            getUserInfo(username);
 
             // Buscar usuarios
-            String search = userService.searchUsers(null, null, null, null, 17L,
-                    null, null, null);
-            System.out.println("\nUsuarios encontrados: \n" + prettyPrintJson(search));
+//            String search = userService.searchUsers(null, null, null, null, 17L,
+//                    null, null, null);
+//            System.out.println("\nUsuarios encontrados: \n" + prettyPrintJson(search));
+
+//            String test = userService.testAuth();
+//            System.out.println("\nTest Auth: \n" + prettyPrintJson(test));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,52 +235,52 @@ public class MainUsuarios {
     }
 
     // Genera `count` usuarios y los crea con crearUsuarioCompleto
-    private static void generateTestUsers(int count, String emailDomain, List<String> roles) throws Exception {
-        // Si no hay instrumentos en el sistema, los carga
-        if (INSTRUMENTOS_CATALOGO.isEmpty()) {
-            loadInstrumentCatalog();
-        }
-
-        Set<String> usados = new HashSet<>();
-        for (int i = 0; i < count; i++) {
-            String firstName = pick(NOMBRES);
-            String lastName = pick(APELLIDOS);
-            String secondLastName = pickDistinct(APELLIDOS, lastName);
-
-            String baseUser = buildUsernameBase(firstName, lastName, secondLastName);
-            String username = ensureUnique(baseUser, usados);
-            String email = username + "@" + emailDomain;
-
-            LocalDate birthDate = randomDateBetween(LocalDate.of(1965, 1, 1), LocalDate.of(2008, 12, 31));
-            LocalDate minJoin = birthDate.plusYears(12).isAfter(LocalDate.of(2010, 1, 1)) ? birthDate.plusYears(12) : LocalDate.of(2010, 1, 1);
-            LocalDate bandJoinDate = randomDateBetween(minJoin, LocalDate.now());
-
-            String phone = randomPhoneEs();
-            String notes = "Usuario de prueba generado el " + LocalDate.now();
-            String profilePictureUrl = "https://picsum.photos/seed/" + username + "/200/200";
-
-            List<String> instrumentIds = pickRandomInstruments(3, INSTRUMENTOS_CATALOGO);
-
-            System.out.println("--------------------------------------------------------------");
-            System.out.println("CREANDO USUARIO: " + username);
-            createCompleteUser(
-                    username,
-                    firstName,
-                    lastName,
-                    secondLastName,
-                    email,
-                    "123456",
-                    birthDate.toString(),
-                    bandJoinDate.toString(),
-                    phone,
-                    notes,
-                    profilePictureUrl,
-                    instrumentIds,
-                    roles
-            );
-            System.out.println("--------------------------------------------------------------");
-        }
-    }
+//    private static void generateTestUsers(int count, String emailDomain, List<String> roles) throws Exception {
+//        // Si no hay instrumentos en el sistema, los carga
+//        if (INSTRUMENTOS_CATALOGO.isEmpty()) {
+//            loadInstrumentCatalog();
+//        }
+//
+//        Set<String> usados = new HashSet<>();
+//        for (int i = 0; i < count; i++) {
+//            String firstName = pick(NOMBRES);
+//            String lastName = pick(APELLIDOS);
+//            String secondLastName = pickDistinct(APELLIDOS, lastName);
+//
+//            String baseUser = buildUsernameBase(firstName, lastName, secondLastName);
+//            String username = ensureUnique(baseUser, usados);
+//            String email = username + "@" + emailDomain;
+//
+//            LocalDate birthDate = randomDateBetween(LocalDate.of(1965, 1, 1), LocalDate.of(2008, 12, 31));
+//            LocalDate minJoin = birthDate.plusYears(12).isAfter(LocalDate.of(2010, 1, 1)) ? birthDate.plusYears(12) : LocalDate.of(2010, 1, 1);
+//            LocalDate bandJoinDate = randomDateBetween(minJoin, LocalDate.now());
+//
+//            String phone = randomPhoneEs();
+//            String notes = "Usuario de prueba generado el " + LocalDate.now();
+//            String profilePictureUrl = "https://picsum.photos/seed/" + username + "/200/200";
+//
+//            List<String> instrumentIds = pickRandomInstruments(3, INSTRUMENTOS_CATALOGO);
+//
+//            System.out.println("--------------------------------------------------------------");
+//            System.out.println("CREANDO USUARIO: " + username);
+//            createCompleteUser(
+//                    username,
+//                    firstName,
+//                    lastName,
+//                    secondLastName,
+//                    email,
+//                    "123456",
+//                    birthDate.toString(),
+//                    bandJoinDate.toString(),
+//                    phone,
+//                    notes,
+//                    profilePictureUrl,
+//                    instrumentIds,
+//                    roles
+//            );
+//            System.out.println("--------------------------------------------------------------");
+//        }
+//    }
 
     // Carga el catálogo de instrumentos desde el sistema
     private static void loadInstrumentCatalog() throws Exception {
@@ -287,42 +308,42 @@ public class MainUsuarios {
         System.out.println("Catálogo de instrumentos cargado (" + INSTRUMENTOS_CATALOGO.size() + "): " + INSTRUMENTOS_CATALOGO);
     }
 
-    private static void createCompleteUser(String username, String firstName, String lastName, String secondLastName, String email, String password,
-                                           String birthDate, String bandJoinDate, String phone, String notes, String profilePictureUrl,
-                                           List<String> instrumentIds, List<String> roles) throws Exception {
-        // Comprueba si el usuario ya existe en Keycloak
-        String existingUserResp = keycloakService.getUserInfoByUsername(username);
-        String existingId = extractFromResponse(existingUserResp, "id");
-        if (existingId != null && !existingId.isEmpty()) {
-            System.out.println("El usuario " + username + " ya existe en Keycloak con ID " + existingId + ", se omite su creación.");
-        } else {
-            // Crear usuario en Keycloak
-            String lastNameFull = lastName + (secondLastName != null && !secondLastName.isEmpty() ? " " + secondLastName : "");
-            keycloakService.createUser(username, email, firstName, lastNameFull, password);
-            System.out.println("El usuario " + username + " creado en Keycloak.");
-        }
-        // Obtener el ID del usuario recién creado de Keycloak
-        String userResp = keycloakService.getUserInfoByUsername(username);
-        System.out.println("\nUsuario " + username + " info Keycloak: \n" + prettyPrintJson(userResp));
-        // Asignar roles
-        assignRolesToUser(username, roles);
-
-        // Extraer ID y createdTimestamp
-        String iamId = extractFromResponse(userResp, "id");
-        String createdTimestampStr = extractFromResponse(userResp, "createdTimestamp");
-        LocalDate systemSignupDate = stringTimestampToLocalDate(createdTimestampStr);
-
-        String birthToSend = (birthDate != null && !birthDate.isBlank())
-                ? requireIsoDate(birthDate, "birthDate")
-                : extractFromResponse(userResp, "birthDate");
-
-        String bandJoinToSend = (bandJoinDate != null && !bandJoinDate.isBlank())
-                ? requireIsoDate(bandJoinDate, "bandJoinDate")
-                : extractFromResponse(userResp, "bandJoinDate");
-
-        // Crear perfil de usuario en el sistema
-        String createUserResp = userService.createUser(iamId, username, firstName, lastName, secondLastName, email,
-                birthToSend, bandJoinToSend, systemSignupDate.toString(), phone, notes, profilePictureUrl, instrumentIds);
-        System.out.println("\nUsuario " + username + " creado en el sistema: \n" + prettyPrintJson(createUserResp));
-    }
+//    private static void createCompleteUser(String username, String firstName, String lastName, String secondLastName, String email, String password,
+//                                           String birthDate, String bandJoinDate, String phone, String notes, String profilePictureUrl,
+//                                           List<String> instrumentIds, List<String> roles) throws Exception {
+//        // Comprueba si el usuario ya existe en Keycloak
+//        String existingUserResp = keycloakService.getUserInfoByUsername(username);
+//        String existingId = extractFromResponse(existingUserResp, "id");
+//        if (existingId != null && !existingId.isEmpty()) {
+//            System.out.println("El usuario " + username + " ya existe en Keycloak con ID " + existingId + ", se omite su creación.");
+//        } else {
+//            // Crear usuario en Keycloak
+//            String lastNameFull = lastName + (secondLastName != null && !secondLastName.isEmpty() ? " " + secondLastName : "");
+//            keycloakService.createUser(username, email, firstName, lastNameFull, password);
+//            System.out.println("El usuario " + username + " creado en Keycloak.");
+//        }
+//        // Obtener el ID del usuario recién creado de Keycloak
+//        String userResp = keycloakService.getUserInfoByUsername(username);
+//        System.out.println("\nUsuario " + username + " info Keycloak: \n" + prettyPrintJson(userResp));
+//        // Asignar roles
+//        assignRolesToUser(username, roles);
+//
+//        // Extraer ID y createdTimestamp
+//        String iamId = extractFromResponse(userResp, "id");
+//        String createdTimestampStr = extractFromResponse(userResp, "createdTimestamp");
+//        LocalDate systemSignupDate = stringTimestampToLocalDate(createdTimestampStr);
+//
+//        String birthToSend = (birthDate != null && !birthDate.isBlank())
+//                ? requireIsoDate(birthDate, "birthDate")
+//                : extractFromResponse(userResp, "birthDate");
+//
+//        String bandJoinToSend = (bandJoinDate != null && !bandJoinDate.isBlank())
+//                ? requireIsoDate(bandJoinDate, "bandJoinDate")
+//                : extractFromResponse(userResp, "bandJoinDate");
+//
+//        // Crear perfil de usuario en el sistema
+//        String createUserResp = userService.createUser(iamId, username, firstName, lastName, secondLastName, email,
+//                birthToSend, bandJoinToSend, systemSignupDate.toString(), phone, notes, profilePictureUrl, instrumentIds);
+//        System.out.println("\nUsuario " + username + " creado en el sistema: \n" + prettyPrintJson(createUserResp));
+//    }
 }
