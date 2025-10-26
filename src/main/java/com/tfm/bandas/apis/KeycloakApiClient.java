@@ -23,7 +23,7 @@ public class KeycloakApiClient {
 
     private HttpRequest.Builder baseRequest(String url) throws IOException, InterruptedException {
         String accessToken = TokenApiClient.getToken(clientId, clientSecret, keycloakHost, realm, client, false);
-        System.out.println("Usando token de acceso: " + accessToken);
+        System.out.println("Client ID: " + clientId + " - Usando token de acceso: " + accessToken);
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Content-Type", "application/json")
@@ -32,68 +32,92 @@ public class KeycloakApiClient {
 
     // ==================== ROLES ====================
     public String createRole(String jsonBody) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/roles")
+        String url = keycloakHost + "/admin/realms/" + realm + "/roles";
+        System.out.println("URL: " + url);
+        System.out.println("Cuerpo de la solicitud: " + jsonBody);
+        HttpRequest request = baseRequest(url)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getRoleInfo(String roleName) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/roles/" + roleName)
+        String url = keycloakHost + "/admin/realms/" + realm + "/roles/" + roleName;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     // ==================== USERS ====================
     public String createUser(String jsonBody) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users")
+        String url = keycloakHost + "/admin/realms/" + realm + "/users";
+        System.out.println("URL: " + url);
+        System.out.println("Cuerpo de la solicitud: " + jsonBody);
+        HttpRequest request = baseRequest(url)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String assignRoleToUser(String userId, String jsonBody) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm")
+        String url = keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm";
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String removeRoleFromUser(String userId, String jsonBody) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm")
+        String url = keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm";
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .method("DELETE", HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getUserRoles(String userId) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm")
+        String url = keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm";
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String updateUser(String userId, String jsonBody) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users/" + userId)
+        String url = keycloakHost + "/admin/realms/" + realm + "/users/" + userId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String updateUserPassword(String userId, String jsonBody) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/reset-password")
+        String url = keycloakHost + "/admin/realms/" + realm + "/users/" + userId + "/reset-password";
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String deleteUser(String userId) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users/" + userId)
+        String url = keycloakHost + "/admin/realms/" + realm + "/users/" + userId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getUserInfo(String userId) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(keycloakHost + "/admin/realms/" + realm + "/users/" + userId)
+        String url = keycloakHost + "/admin/realms/" + realm + "/users/" + userId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
                 .GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getUserInfoByUsername(String username) throws IOException, InterruptedException {
-        HttpRequest request = baseRequest(String.format("%s/admin/realms/%s/users?username=%s", keycloakHost, realm, username)).GET().build();
+        String url = String.format("%s/admin/realms/%s/users?username=%s", keycloakHost, realm, username);
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 }

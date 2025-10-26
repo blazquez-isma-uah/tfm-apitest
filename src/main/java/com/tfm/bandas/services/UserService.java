@@ -187,4 +187,43 @@ public class UserService {
         return client.searchInstruments(buildQuery(params));
     }
 
+    // ==================== ROLES ====================
+    public String getAllRoles() throws Exception {
+        return client.getAllRoles();
+    }
+
+    public String createRole(String name, String description) throws Exception {
+        String jsonBody = String.format("""
+        {
+          "name": "%s",
+          "description": "%s"
+        }
+        """, name, description == null ? "" : description);
+        return client.createRole(jsonBody);
+    }
+
+    public String deleteRole(String id) throws Exception {
+        return client.deleteRole(id);
+    }
+
+    public String getRoleById(String id) throws Exception {
+        return client.getRoleById(id);
+    }
+
+    public String getRoleByName(String name) throws Exception {
+        return client.getRoleByName(name);
+    }
+
+    public String listUserRoles(String userId) throws Exception {
+        return client.listUserRoles(userId);
+    }
+
+    public String assignRoleToUser(String userId, String roleName) throws Exception {
+        return client.assignRoleToUser(userId, roleName);
+    }
+
+    public String removeRoleFromUser(String userId, String roleName) throws Exception {
+        return client.removeRoleFromUser(userId, roleName);
+    }
+
 }

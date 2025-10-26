@@ -30,47 +30,35 @@ public class MainUsuarios {
 
     public static void main(String[] args) {
         try {
+            // Obtener todos los Roles
+            String res = userService.getAllRoles();
             // Crear Rol
 //            keycloakService.createRole("ADMIN", "Administrador del sistema");
 //            keycloakService.createRole("MUSICIAN", "Músico de la banda");
             // Obtener info Rol
 //            assignRolesToUser("pepe", List.of("ADMIN", "MUSICIAN"));
 
+            System.out.println("\nRespuesta: \n" + prettyPrintJson(res));
+
             // Crear Usuarios: Genera N usuarios de prueba
 //            generarUsuariosDePrueba(20, "bandas.com", List.of("MUSICIAN"));
-//            crearUsuarioCompleto(
-//                    "adminBandas",
-//                    "Administrador",
-//                    "Bandas",
+//            String resp = userService.createUser(
+//                    "pruebauser@bandas.com",
+//                    "pruebauser",
+//                    "123456",
+//                    "Usuario",
+//                    "Prueba",
+//                    "MUSICIAN",
+//                    "Test",
+//                    "2000-01-01",
+//                    "2015-06-15",
+//                    LocalDate.now().toString(),
+//                    "666666666",
+//                    "Usuario de prueba creado desde MainUsuarios",
 //                    "",
-//                    "admin@bandas.com",
-//                    "admin123",
-//                    "1996-05-04",
-//                    "2008-01-01",
-//                    "625363757",
-//                    "Usuario administrador del sistema en Keycloak y del sistema de gestión de bandas.",
-//                    "",
-//                    List.of(),
-//                    List.of("ADMIN")
+//                    List.of("11","12")
 //            );
-
-            String resp = userService.createUser(
-                    "pruebauser@bandas.com",
-                    "pruebauser",
-                    "123456",
-                    "Usuario",
-                    "Prueba",
-                    "MUSICIAN",
-                    "Test",
-                    "2000-01-01",
-                    "2015-06-15",
-                    LocalDate.now().toString(),
-                    "666666666",
-                    "Usuario de prueba creado desde MainUsuarios",
-                    "",
-                    List.of("11","12")
-            );
-            System.out.println("\nUsuario de prueba creado: \n" + prettyPrintJson(resp));
+//            System.out.println("\nUsuario de prueba creado: \n" + prettyPrintJson(resp));
 
             // Borrar Usuario
 //            String username = "pruebauser";
