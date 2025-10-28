@@ -34,20 +34,20 @@ public class UserService {
         return client.getUserByEmail(email);
     }
 
+    public String getUserByUsername(String username) throws Exception {
+        return client.getUserByUsername(username);
+    }
+
     public String getUserByIamId(String iamId) throws Exception {
         return client.getUserByIamId(iamId);
     }
 
-    public String createUser(String email, String username, String password, String firstName, String lastName, String role,
+    public String createUser(String email, String username, String password, String firstName, String lastName,
                              String secondLastName, String birthDate, String bandJoinDate, String systemSignupDate,
-                             String phone, String notes, String profilePictureUrl, List<String> instrumentIds) throws Exception {
+                             String phone, String notes, String profilePictureUrl, List<String> instrumentIds, List<String> rolesNames) throws Exception {
 
-        StringBuilder instrumentsJson = new StringBuilder("[");
-        for (int i = 0; i < instrumentIds.size(); i++) {
-            instrumentsJson.append(instrumentIds.get(i));
-            if (i < instrumentIds.size() - 1) instrumentsJson.append(",");
-        }
-        instrumentsJson.append("]");
+        String instrumentsJson = toJsonArray(instrumentIds, false);
+        String rolesJson = toJsonArray(rolesNames, true);
 
         String jsonBody = String.format("""
         {
@@ -56,7 +56,6 @@ public class UserService {
           "password": "%s",
           "firstName": "%s",
           "lastName": "%s",
-          "role": "%s",
           "secondLastName": "%s",
           "birthDate": "%s",
           "bandJoinDate": "%s",
@@ -64,42 +63,32 @@ public class UserService {
           "phone": "%s",
           "notes": "%s",
           "profilePictureUrl": "%s",
-          "instrumentIds": %s
+          "instrumentIds": %s,
+          "roles": %s
         }
-        """, email, username, password, firstName, lastName, role, secondLastName,
+        """, email, username, password, firstName, lastName, secondLastName,
                 requireIsoDate(birthDate, "birthDate"), requireIsoDate(bandJoinDate, "bandJoinDate"),
-                requireIsoDate(systemSignupDate, "systemSignupDate"), phone, notes, profilePictureUrl, instrumentsJson);
+                requireIsoDate(systemSignupDate, "systemSignupDate"), phone, notes, profilePictureUrl, instrumentsJson, rolesJson);
         return client.createUser(jsonBody);
     }
 
-    public String updateUser(String id, String iamId, String username, String firstName, String lastName, String secondLastName,
-                             String email, String birthDate, String bandJoinDate, String systemSignupDate,
-                             String phone, String notes, String profilePictureUrl, List<String> instrumentIds) throws Exception {
-        StringBuilder instrumentsJson = new StringBuilder("[");
-        for (int i = 0; i < instrumentIds.size(); i++) {
-            instrumentsJson.append("\"").append(instrumentIds.get(i)).append("\"");
-            if (i < instrumentIds.size() - 1) instrumentsJson.append(",");
-        }
-        instrumentsJson.append("]");
+    public String updateUser(String id, String firstName, String lastName,
+                             String secondLastName, String email, String birthDate,
+                             String bandJoinDate, String phone, String notes, String profilePictureUrl) throws Exception {
 
         String jsonBody = String.format("""
         {
-          "iamId": "%s",
-          "username": "%s",
+          "email": "%s",
           "firstName": "%s",
           "lastName": "%s",
           "secondLastName": "%s",
-          "email": "%s",
           "birthDate": "%s",
           "bandJoinDate": "%s",
-          "systemSignupDate": "%s",
           "phone": "%s",
           "notes": "%s",
-          "profilePictureUrl": "%s",
-          "instrumentIds": %s
-        }
-        """, iamId, username, firstName, lastName, secondLastName, email, birthDate, bandJoinDate,
-                systemSignupDate, phone, notes, profilePictureUrl, instrumentsJson.toString());
+          "profilePictureUrl": "%s"        }
+        """, email, firstName, lastName, secondLastName, birthDate, bandJoinDate,
+                phone, notes, profilePictureUrl);
         return client.updateUser(id, jsonBody);
     }
 
@@ -126,11 +115,12 @@ public class UserService {
         return client.assignInstruments(id, sb.toString());
     }
 
-    public String searchUsers(String firstName, String lastName, String email, Boolean active, Long instrumentId,
+    public String searchUsers(String firstName, String lastName, String secondLastName, String email, Boolean active, Long instrumentId,
                               Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
         putIfNotBlank(params, "firstName", firstName);
         putIfNotBlank(params, "lastName", lastName);
+        putIfNotBlank(params, "secondLastName", secondLastName);
         putIfNotBlank(params, "email", email);
         putIfNotBlank(params, "active", String.valueOf(active));
         putIfNotBlank(params, "instrumentId", String.valueOf(instrumentId));
@@ -139,10 +129,6 @@ public class UserService {
         putIfNotBlank(params, "sort", sort);
 
         return client.searchUsers(buildQuery(params));
-    }
-
-    public String testAuth() throws Exception {
-        return client.testAuth();
     }
 
     public String getMyProfile() throws Exception {
@@ -202,8 +188,8 @@ public class UserService {
         return client.createRole(jsonBody);
     }
 
-    public String deleteRole(String id) throws Exception {
-        return client.deleteRole(id);
+    public String deleteRole(String roleName) throws Exception {
+        return client.deleteRole(roleName);
     }
 
     public String getRoleById(String id) throws Exception {
@@ -216,6 +202,10 @@ public class UserService {
 
     public String listUserRoles(String userId) throws Exception {
         return client.listUserRoles(userId);
+    }
+
+    public String listUserRolesByUsername(String username) throws Exception {
+        return client.listUserRolesByUsername(username);
     }
 
     public String assignRoleToUser(String userId, String roleName) throws Exception {

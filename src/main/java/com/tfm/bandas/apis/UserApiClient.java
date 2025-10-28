@@ -55,6 +55,13 @@ public class UserApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
+    public String getUserByUsername(String username) throws IOException, InterruptedException {
+        String url = usersHost + "/api/users/username/" + username;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url).GET().build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    }
+
     public String getUserByIamId(String iamId) throws IOException, InterruptedException {
         String url = usersHost + "/api/users/iam/" + iamId;
         System.out.println("URL: " + url);
@@ -118,18 +125,11 @@ public class UserApiClient {
     public String getMyProfile() throws IOException, InterruptedException {
         String url = usersHost + "/api/users/me";
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url).PUT(HttpRequest.BodyPublishers.noBody()).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
-    }
-
-    public String testAuth() throws IOException, InterruptedException {
-        String url = "http://localhost:8085" + "/users/api/users";
-        System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
-    // ==================== INSTRUMENTS ====================
 
+    // ==================== INSTRUMENTS ====================
     public String getAllInstruments(String query) throws IOException, InterruptedException {
         String url = usersHost + "/api/instruments" + query;
         System.out.println("URL: " + url);
@@ -211,19 +211,26 @@ public class UserApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
+    public String listUserRolesByUsername(String username) throws IOException, InterruptedException {
+        String url = usersHost + "/api/roles/user/username/" + username;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url).GET().build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    }
+
     public String assignRoleToUser(String userId, String roleName) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/user/" + userId + "/assign/" + roleName;
+        String url = usersHost + "/api/roles/user/" + userId + "/" + roleName;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
-                .PUT(HttpRequest.BodyPublishers.noBody()).build();
+                .POST(HttpRequest.BodyPublishers.noBody()).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String removeRoleFromUser(String userId, String roleName) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/user/" + userId + "/remove/" + roleName;
+        String url = usersHost + "/api/roles/user/" + userId + "/" + roleName;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
-                .PUT(HttpRequest.BodyPublishers.noBody()).build();
+                .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 }

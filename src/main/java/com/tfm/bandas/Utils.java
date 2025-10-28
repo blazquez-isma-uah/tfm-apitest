@@ -26,6 +26,17 @@ public class Utils {
     public static final String CLIENT_ID = "realm-admin";
     public static final String CLIENT_SECRET = "8nWwBGuo0RxdRQfHUaQgcqv7Fibt8JYX";
 
+    public static final List<String> NOMBRES = List.of(
+            "Alejandro","María","José","Lucía","Pablo","Laura","David","Ana","Sergio","Marta",
+            "Daniel","Paula","Javier","Elena","Carlos","Sara","Diego","Alba","Manuel","Irene",
+            "Adrián","Noelia","Rubén","Claudia","Hugo","Carmen","Iván","Patricia","Raúl","Beatriz"
+    );
+
+    public static final List<String> APELLIDOS = List.of(
+            "García","Rodríguez","González","Fernández","López","Martínez","Sánchez","Pérez","Gómez","Martín",
+            "Jiménez","Ruiz","Hernández","Díaz","Moreno","Muñoz","Álvarez","Romero","Alonso","Gutiérrez",
+            "Navarro","Torres","Domínguez","Vázquez","Ramos","Gil","Ramírez","Serrano","Blanco","Suárez"
+    );
 
     public static String prettyPrintJson(String json) {
         try {
@@ -35,6 +46,18 @@ public class Utils {
         } catch (Exception e) {
             return json;
         }
+    }
+
+    public static String toJsonArray(List<String> list, boolean quote) {
+        if (list == null || list.isEmpty()) return "[]";
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < list.size(); i++) {
+            if (quote) sb.append("\"").append(list.get(i)).append("\"");
+            else sb.append(list.get(i));
+            if (i < list.size() - 1) sb.append(",");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     public static String extractFromResponse(String userResp, String field) {
