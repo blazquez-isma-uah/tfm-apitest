@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import static com.tfm.bandas.Utils.API_EVENTS;
+
 public class EventApiClient {
 
     private final HttpClient client;
@@ -36,7 +38,7 @@ public class EventApiClient {
     // ==================== Endpoints de Eventos ====================
 
     public String createEvent(String jsonBody) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events";
+        String url = eventsHost + API_EVENTS;
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
         HttpRequest request = baseRequest(url)
@@ -44,8 +46,8 @@ public class EventApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String updateEvent(String id, String jsonBody) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events/" + id;
+    public String updateEvent(String eventId, String jsonBody) throws IOException, InterruptedException {
+        String url = eventsHost + API_EVENTS + "/" + eventId;
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
         HttpRequest request = baseRequest(url)
@@ -53,16 +55,16 @@ public class EventApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String deleteEvent(String id) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events/" + id;
+    public String deleteEvent(String eventId) throws IOException, InterruptedException {
+        String url = eventsHost + API_EVENTS + "/" + eventId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String getEventById(String id) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events/" + id;
+    public String getEventById(String eventId) throws IOException, InterruptedException {
+        String url = eventsHost + API_EVENTS + "/" + eventId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
@@ -71,7 +73,7 @@ public class EventApiClient {
 
     // Ahora recibe el query completo (incluyendo el '?' inicial)
     public String listEvents(String query) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events" + query;
+        String url = eventsHost + API_EVENTS + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
@@ -79,7 +81,7 @@ public class EventApiClient {
     }
 
     public String listPastEvents(String query) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events/past" + query;
+        String url = eventsHost + API_EVENTS + "/past" + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
@@ -87,7 +89,7 @@ public class EventApiClient {
     }
 
     public String privateCalendar(String query) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events/calendar" + query;
+        String url = eventsHost + API_EVENTS + "/calendar" + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
@@ -95,7 +97,7 @@ public class EventApiClient {
     }
 
     public String searchEvents(String query) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events/search" + query;
+        String url = eventsHost + API_EVENTS + "/search" + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
@@ -103,7 +105,7 @@ public class EventApiClient {
     }
 
     public String getScores(String eventId) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/events/" + eventId + "/scores";
+        String url = eventsHost + API_EVENTS + "/" + eventId + "/scores";
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
@@ -112,11 +114,9 @@ public class EventApiClient {
 
     // Público: sin Authorization
     public String publicCalendar(String query) throws IOException, InterruptedException {
-        String url = eventsHost + "/api/public/events/calendar" + query;
+        String url = eventsHost + API_EVENTS + "/public/calendar" + query;
         System.out.println("URL: " + url);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Content-Type", "application/json")
+        HttpRequest request = baseRequest(url)
                 .GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }

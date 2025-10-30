@@ -2,7 +2,7 @@ package com.tfm.bandas;
 
 import com.tfm.bandas.apis.UserApiClient;
 import com.tfm.bandas.services.UserService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class UserServiceTest {
 
     @Test
     public void GetUserByUsername() throws Exception {
-        String username = "ahernandezm";
+        String username = "ralonsor";
 
         String result = userService.getUserByUsername(username);
         System.out.println(prettyPrintJson(result));
@@ -122,15 +122,6 @@ public class UserServiceTest {
         String userId = "23";
 
         String result = userService.deleteUser(userId);
-        System.out.println(prettyPrintJson(result));
-    }
-
-    @Test
-    public void AssignInstruments() throws Exception {
-        String userId = "24";
-        List<String> instruments = List.of("3", "4");
-
-        String result = userService.assignInstruments(userId, instruments);
         System.out.println(prettyPrintJson(result));
     }
 

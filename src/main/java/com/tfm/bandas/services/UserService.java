@@ -104,17 +104,6 @@ public class UserService {
         return client.deleteUser(id);
     }
 
-    public String assignInstruments(String id, List<String> instruments) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < instruments.size(); i++) {
-            sb.append("\"").append(instruments.get(i)).append("\"");
-            if (i < instruments.size() - 1) sb.append(",");
-        }
-        sb.append("]");
-        return client.assignInstruments(id, sb.toString());
-    }
-
     public String searchUsers(String firstName, String lastName, String secondLastName, String email, Boolean active, Long instrumentId,
                               Integer page, Integer size, String sort) throws Exception {
         Map<String, String> params = new LinkedHashMap<>();
@@ -173,6 +162,19 @@ public class UserService {
         return client.searchInstruments(buildQuery(params));
     }
 
+    public String updateUserInstruments(String id, List<String> instruments) throws Exception {
+        String instrumentsJson = toJsonArray(instruments, false);
+        return client.updateUserInstruments(id, instrumentsJson);
+    }
+
+    public String assignInstrumentToUser(String userId, String instrumentId) throws Exception {
+        return client.assignInstrumentToUser(userId, instrumentId);
+    }
+
+    public String removeInstrumentFromUser(String userId, String instrumentId) throws Exception {
+        return client.removeInstrumentFromUser(userId, instrumentId);
+    }
+
     // ==================== ROLES ====================
     public String getAllRoles() throws Exception {
         return client.getAllRoles();
@@ -206,6 +208,11 @@ public class UserService {
 
     public String listUserRolesByUsername(String username) throws Exception {
         return client.listUserRolesByUsername(username);
+    }
+
+    public String updateUserRoles(String userId, List<String> roleNames) throws Exception {
+        String rolesJson = toJsonArray(roleNames, true);
+        return client.updateUserRoles(userId, rolesJson);
     }
 
     public String assignRoleToUser(String userId, String roleName) throws Exception {

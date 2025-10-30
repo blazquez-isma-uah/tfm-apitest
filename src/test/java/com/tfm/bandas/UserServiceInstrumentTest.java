@@ -4,6 +4,8 @@ import com.tfm.bandas.apis.UserApiClient;
 import com.tfm.bandas.services.UserService;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static com.tfm.bandas.Utils.*;
 
 public class UserServiceInstrumentTest {
@@ -56,6 +58,31 @@ public class UserServiceInstrumentTest {
         String sort = "id";
 
         String result = userService.searchInstruments(name, type, page, size, sort);
+        System.out.println(prettyPrintJson(result));
+    }
+
+    @Test
+    public void UpdateUserInstruments() throws Exception {
+        String userId = "15";
+        List<String> instruments = List.of("9", "10", "22");
+
+        String result = userService.updateUserInstruments(userId, instruments);
+        System.out.println(prettyPrintJson(result));
+    }
+
+    @Test
+    public void AssignInstrumentToUser() throws Exception {
+        String userId = "15";
+        String instrumentId = "14";
+        String result = userService.assignInstrumentToUser(userId, instrumentId);
+        System.out.println(prettyPrintJson(result));
+    }
+
+    @Test
+    public void RemoveInstrumentFromUser() throws Exception {
+        String userId = "15";
+        String instrumentId = "22";
+        String result = userService.removeInstrumentFromUser(userId, instrumentId);
         System.out.println(prettyPrintJson(result));
     }
 }

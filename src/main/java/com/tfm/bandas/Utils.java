@@ -26,6 +26,12 @@ public class Utils {
     public static final String CLIENT_ID = "realm-admin";
     public static final String CLIENT_SECRET = "8nWwBGuo0RxdRQfHUaQgcqv7Fibt8JYX";
 
+    public static final String API_USERS = "/api/users";
+    public static final String API_INSTRUMENTS = "/api/instruments";
+    public static final String API_ROLES = "/api/roles";
+    public static final String API_EVENTS = "/api/events";
+
+
     public static final List<String> NOMBRES = List.of(
             "Alejandro","María","José","Lucía","Pablo","Laura","David","Ana","Sergio","Marta",
             "Daniel","Paula","Javier","Elena","Carlos","Sara","Diego","Alba","Manuel","Irene",

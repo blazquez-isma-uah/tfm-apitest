@@ -56,7 +56,7 @@ public class UserServiceRoleTest {
 
     @Test
     public void ListUserRoles() throws Exception {
-        String userId = "10";
+        String userId = "24";
 
         String result = userService.listUserRoles(userId);
         System.out.println(prettyPrintJson(result));
@@ -64,14 +64,23 @@ public class UserServiceRoleTest {
 
     @Test
     public void ListUserRolesByUsername() throws Exception {
-        String username = "ahernandezm";
+        String username = "sserranoa";
         String result = userService.listUserRolesByUsername(username);
         System.out.println(prettyPrintJson(result));
     }
 
     @Test
+    public void UpdateUserRoles() throws Exception {
+        String userId = "21";
+        List<String> roleNames = List.of("MUSICIAN", "ADMIN");
+
+        String result = userService.updateUserRoles(userId, roleNames);
+        System.out.println(prettyPrintJson(result));
+    }
+
+    @Test
     public void AssignRoleToUser() throws Exception {
-        String userId = "22";
+        String userId = "20";
         String roleName = "MUSICIAN";
 
         String result = userService.assignRoleToUser(userId, roleName);
@@ -80,8 +89,8 @@ public class UserServiceRoleTest {
 
     @Test
     public void RemoveRoleFromUser() throws Exception {
-        String userId = "22";
-        String roleName = "MUSICIAN";
+        String userId = "21";
+        String roleName = "ADMIN";
 
         String result = userService.removeRoleFromUser(userId, roleName);
         System.out.println(prettyPrintJson(result));

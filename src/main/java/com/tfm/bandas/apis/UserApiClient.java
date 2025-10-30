@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import static com.tfm.bandas.Utils.*;
+
 public class UserApiClient {
     private final HttpClient client;
     private final String usersHost;
@@ -35,42 +37,42 @@ public class UserApiClient {
     // ==================== USERS ====================
 
     public String getAllUsers(String query) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users" + query;
+        String url = usersHost + API_USERS + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String getUserById(String id) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/" + id;
+    public String getUserById(String userId) throws IOException, InterruptedException {
+        String url = usersHost + API_USERS + "/" + userId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getUserByEmail(String email) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/email/" + email;
+        String url = usersHost + API_USERS + "/email/" + email;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getUserByUsername(String username) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/username/" + username;
+        String url = usersHost + API_USERS + "/username/" + username;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getUserByIamId(String iamId) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/iam/" + iamId;
+        String url = usersHost + API_USERS + "/iam/" + iamId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String createUser(String jsonBody) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users";
+        String url = usersHost + API_USERS;
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
         HttpRequest request = baseRequest(url)
@@ -78,52 +80,44 @@ public class UserApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String updateUser(String id, String jsonBody) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/" + id;
+    public String updateUser(String userId, String jsonBody) throws IOException, InterruptedException {
+        String url = usersHost + API_USERS + "/" + userId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String enableUser(String id) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/" + id + "/enable";
+    public String enableUser(String userId) throws IOException, InterruptedException {
+        String url = usersHost + API_USERS + "/" + userId + "/enable";
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).PUT(HttpRequest.BodyPublishers.noBody()).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String disableUser(String id) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/" + id + "/disable";
+    public String disableUser(String userId) throws IOException, InterruptedException {
+        String url = usersHost + API_USERS + "/" + userId + "/disable";
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).PUT(HttpRequest.BodyPublishers.noBody()).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String deleteUser(String id) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/" + id;
+    public String deleteUser(String userId) throws IOException, InterruptedException {
+        String url = usersHost + API_USERS + "/" + userId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String assignInstruments(String id, String jsonBody) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/" + id + "/assign-instruments";
-        System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
-                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
-    }
-
     public String searchUsers(String query) throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/search" + query;
+        String url = usersHost + API_USERS + "/search" + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getMyProfile() throws IOException, InterruptedException {
-        String url = usersHost + "/api/users/me";
+        String url = usersHost + API_USERS + "/me";
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -131,52 +125,76 @@ public class UserApiClient {
 
     // ==================== INSTRUMENTS ====================
     public String getAllInstruments(String query) throws IOException, InterruptedException {
-        String url = usersHost + "/api/instruments" + query;
+        String url = usersHost + API_INSTRUMENTS + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String getInstrumentById(String id) throws IOException, InterruptedException {
-        String url = usersHost + "/api/instruments/" + id;
+    public String getInstrumentById(String instrumentId) throws IOException, InterruptedException {
+        String url = usersHost + API_INSTRUMENTS + "/" + instrumentId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String createInstrument(String jsonBody) throws IOException, InterruptedException {
-        String url = usersHost + "/api/instruments";
+        String url = usersHost + API_INSTRUMENTS;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String deleteInstrument(String id) throws IOException, InterruptedException {
-        String url = usersHost + "/api/instruments/" + id;
+    public String deleteInstrument(String instrumentId) throws IOException, InterruptedException {
+        String url = usersHost + API_INSTRUMENTS + "/" + instrumentId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String searchInstruments(String query) throws IOException, InterruptedException {
-        String url = usersHost + "/api/instruments/search" + query;
+        String url = usersHost + API_INSTRUMENTS + "/search" + query;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    }
+
+    public String updateUserInstruments(String userId, String jsonBody) throws IOException, InterruptedException {
+        String url = usersHost + API_INSTRUMENTS + "/user/" + userId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    }
+
+    public String assignInstrumentToUser(String userId, String instrumentId) throws IOException, InterruptedException {
+        String url = usersHost + API_INSTRUMENTS + "/user/" + userId + "/" + instrumentId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
+                .POST(HttpRequest.BodyPublishers.noBody()).build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    }
+
+    public String removeInstrumentFromUser(String userId, String instrumentId) throws IOException, InterruptedException {
+        String url = usersHost + API_INSTRUMENTS + "/user/" + userId + "/" + instrumentId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
+                .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     // ==================== ROLES ====================
 
     public String getAllRoles() throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles";
+        String url = usersHost + API_ROLES;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String createRole(String jsonBody) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles";
+        String url = usersHost + API_ROLES;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
@@ -184,42 +202,50 @@ public class UserApiClient {
     }
 
     public String deleteRole(String roleName) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/" + roleName;
+        String url = usersHost + API_ROLES + "/" + roleName;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String getRoleById(String id) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/" + id;
+    public String getRoleById(String roleId) throws IOException, InterruptedException {
+        String url = usersHost + API_ROLES + "/" + roleId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String getRoleByName(String name) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/name/" + name;
+        String url = usersHost + API_ROLES + "/name/" + name;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String listUserRoles(String userId) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/user/" + userId;
+        String url = usersHost + API_ROLES + "/user/" + userId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
     public String listUserRolesByUsername(String username) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/user/username/" + username;
+        String url = usersHost + API_ROLES + "/user/username/" + username;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url).GET().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
+    public String updateUserRoles(String userId, String jsonBody) throws IOException, InterruptedException {
+        String url = usersHost + API_ROLES + "/user/" + userId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url)
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    }
+
     public String assignRoleToUser(String userId, String roleName) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/user/" + userId + "/" + roleName;
+        String url = usersHost + API_ROLES + "/user/" + userId + "/" + roleName;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .POST(HttpRequest.BodyPublishers.noBody()).build();
@@ -227,7 +253,7 @@ public class UserApiClient {
     }
 
     public String removeRoleFromUser(String userId, String roleName) throws IOException, InterruptedException {
-        String url = usersHost + "/api/roles/user/" + userId + "/" + roleName;
+        String url = usersHost + API_ROLES + "/user/" + userId + "/" + roleName;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .DELETE().build();
