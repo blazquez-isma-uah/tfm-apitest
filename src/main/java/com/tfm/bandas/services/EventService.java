@@ -97,7 +97,7 @@ public class EventService {
         putIfNotBlank(params, "q", qText);
         putIfNotBlank(params, "title", title);
         putIfNotBlank(params, "description", description);
-        putIfNotBlank(params, "locations", location);
+        putIfNotBlank(params, "location", location);
         putIfNotBlank(params, "timeZone", timeZone);
         putIfNotBlank(params, "type", type);
         putIfNotBlank(params, "status", status);

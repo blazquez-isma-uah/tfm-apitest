@@ -14,15 +14,15 @@ public class EventServiceTest {
 
     @Test
     public void CreateEvent() throws Exception {
-        String title = "Test Event";
-        String description = "Description";
-        String location = "Location";
-        String localStart = "2025-10-27T10:00:00Z";
-        String localEnd = "2025-10-27T12:00:00Z";
+        String title = "Reunión celebración fin de año";
+        String description = "Reunión para celebrar el fin de año y planificar eventos futuros";
+        String location = "Sala de Reuniones, Alba de Tormes";
+        String localStart = "2025-12-30T20:00:00Z";
+        String localEnd = "2025-12-30T22:00:00Z";
         String timeZone = "Europe/Madrid";
-        String type = "REHEARSAL";
-        String status = "SCHEDULED";
-        String visibility = "PUBLIC";
+        String type = "MEETING";// REHEARSAL, PERFORMANCE, MEETING, OTHER
+        String status = "SCHEDULED"; // SCHEDULED, CANCELED, POSTPONED
+        String visibility = "PUBLIC"; // PUBLIC, BAND_ONLY
 
         String result = eventService.createEvent(title, description, location, localStart, localEnd, timeZone, type, status, visibility);
         System.out.println(prettyPrintJson(result));
@@ -30,16 +30,16 @@ public class EventServiceTest {
 
     @Test
     public void UpdateEvent() throws Exception {
-        String id = "eventId";
-        String title = "Updated Event";
-        String description = "Updated Description";
-        String location = "Updated Location";
-        String localStart = "2025-10-28T10:00:00Z";
-        String localEnd = "2025-10-28T12:00:00Z";
+        String id = "c6661332-8a12-4d40-be9c-d80824b380d5";
+        String title = "Reunión Informativa Noviembre";
+        String description = "Reunión Informativa de Noviembre";
+        String location = "Sala de Reuniones, Alba de Tormes";
+        String localStart = "2025-11-01T18:00:00Z";
+        String localEnd = "2025-11-01T19:30:00Z";
         String timeZone = "Europe/Madrid";
-        String type = "REHEARSAL";
-        String status = "SCHEDULED";
-        String visibility = "BAND_ONLY";
+        String type = "MEETING"; // REHEARSAL, PERFORMANCE, MEETING, OTHER
+        String status = "CANCELED"; // SCHEDULED, CANCELED, POSTPONED
+        String visibility = "PUBLIC"; // PUBLIC, BAND_ONLY
 
         String result = eventService.updateEvent(id, title, description, location, localStart, localEnd, timeZone, type, status, visibility);
         System.out.println(prettyPrintJson(result));
@@ -47,7 +47,7 @@ public class EventServiceTest {
 
     @Test
     public void DeleteEvent() throws Exception {
-        String id = "eventId";
+        String id = "64259397-5ff2-49a7-9349-286f0fa37aaf";
 
         String result = eventService.deleteEvent(id);
         System.out.println(prettyPrintJson(result));
@@ -55,7 +55,7 @@ public class EventServiceTest {
 
     @Test
     public void GetEventById() throws Exception {
-        String id = "eventId";
+        String id = "c6661332-8a12-4d40-be9c-d80824b380d5";
 
         String result = eventService.getEventById(id);
         System.out.println(prettyPrintJson(result));
@@ -63,11 +63,11 @@ public class EventServiceTest {
 
     @Test
     public void ListEvents() throws Exception {
-        String from = "2025-01-01T00:00:00Z";
-        String to = "2025-12-31T00:00:00Z";
+        String from = "2025-11-01T00:00:00Z";
+        String to = "2025-11-30T00:00:00Z";
         Integer page = 0;
         Integer size = 10;
-        String sort = "startAt";
+        String sort = "startAt,desc";
 
         String result = eventService.listEvents(from, to, page, size, sort);
         System.out.println(prettyPrintJson(result));
@@ -75,10 +75,10 @@ public class EventServiceTest {
 
     @Test
     public void ListPastEvents() throws Exception {
-        String before = "2025-10-30T00:00:00Z";
+        String before = "2025-10-31T00:00:00Z";
         Integer page = 0;
         Integer size = 10;
-        String sort = "startAt";
+        String sort = "startAt,asc";
 
         String result = eventService.listPastEvents(before, page, size, sort);
         System.out.println(prettyPrintJson(result));
@@ -86,8 +86,8 @@ public class EventServiceTest {
 
     @Test
     public void PrivateCalendar() throws Exception {
-        String from = "2024-10-01T00:00:00Z";
-        String to = "2025-10-31T00:00:00Z";
+        String from = "2025-10-31T00:00:00Z";
+        String to = "2025-12-31T00:00:00Z";
         String tz = "Europe/Madrid";
         Integer page = 0;
         Integer size = 10;
@@ -99,8 +99,8 @@ public class EventServiceTest {
 
     @Test
     public void PublicCalendar() throws Exception {
-        String from = "2024-10-01T00:00:00Z";
-        String to = "2025-11-30T00:00:00Z";
+        String from = "2025-10-31T00:00:00Z";
+        String to = "2025-12-31T00:00:00Z";
         String tz = "Europe/Madrid";
         Integer page = 0;
         Integer size = 10;
@@ -112,17 +112,17 @@ public class EventServiceTest {
 
     @Test
     public void SearchEvents() throws Exception {
-        String qText = "query";
-        String title = "Title";
-        String description = "Description";
-        String location = "Location";
-        String timeZone = "UTC";
-        String type = "Type";
-        String status = "Status";
-        String visibility = "Public";
-        Integer page = 1;
+        String qText = "";
+        String title = "";
+        String description = "";
+        String location = "";
+        String timeZone = "";
+        String type = "";
+        String status = "";
+        String visibility = "BAND_ONLY";
+        Integer page = 0;
         Integer size = 10;
-        String sort = "date";
+        String sort = "startAt,asc";
 
         String result = eventService.searchEvents(qText, title, description, location, timeZone, type, status, visibility, page, size, sort);
         System.out.println(prettyPrintJson(result));
@@ -130,7 +130,7 @@ public class EventServiceTest {
 
     @Test
     public void GetScores() throws Exception {
-        String eventId = "eventId";
+        String eventId = "656c376f-9614-11f0-91ac-0242ac130002";
 
         String result = eventService.getScores(eventId);
         System.out.println(prettyPrintJson(result));
