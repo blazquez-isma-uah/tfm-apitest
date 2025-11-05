@@ -48,7 +48,7 @@ public class UserServiceRoleTest {
 
     @Test
     public void GetRoleByName() throws Exception {
-        String roleName = "MUSICIAN";
+        String roleName = "ADMIN";
 
         String result = userService.getRoleByName(roleName);
         System.out.println(prettyPrintJson(result));

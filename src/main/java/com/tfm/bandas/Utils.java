@@ -18,6 +18,8 @@ public class Utils {
     public static final String KEYCLOAK_HOST = "http://localhost:8080";
     public static final String USERS_HOST = "http://localhost:8085";
     public static final String EVENTS_HOST = "http://localhost:8085";
+    public static final String SURVEYS_HOST = "http://localhost:8085";
+
     public static final String REALM = "tfm-bandas";
     public static final String ADMIN_USERNAME = "adminbandas";
     public static final String ADMIN_PASSWORD = "admin123";
@@ -30,6 +32,7 @@ public class Utils {
     public static final String API_INSTRUMENTS = "/api/instruments";
     public static final String API_ROLES = "/api/roles";
     public static final String API_EVENTS = "/api/events";
+    public static final String API_SURVEYS = "/api/surveys";
 
 
     public static final List<String> NOMBRES = List.of(
