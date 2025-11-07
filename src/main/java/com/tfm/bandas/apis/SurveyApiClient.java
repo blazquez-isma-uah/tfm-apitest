@@ -112,7 +112,7 @@ public class SurveyApiClient {
 
     // POST /api/surveys/{surveyId}/responses - Responder a encuesta (ADMIN, MUSICIAN)
     public String respondToSurvey(String surveyId, String jsonBody) throws IOException, InterruptedException {
-        String url = surveysHost + API_SURVEYS + "/" + surveyId + "/responses";
+        String url = surveysHost + API_SURVEYS + "/raesponses/" + surveyId;
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
         HttpRequest request = baseRequest(url)
@@ -122,7 +122,7 @@ public class SurveyApiClient {
 
     // GET /api/surveys/yesNoMaybeResults/{surveyId} - Obtener resultados Yes/No/Maybe (ADMIN)
     public String getYesNoMaybeResults(String surveyId) throws IOException, InterruptedException {
-        String url = surveysHost + API_SURVEYS + "/yesNoMaybeResults/" + surveyId;
+        String url = surveysHost + API_SURVEYS + "/raesponses/yesNoMaybeResults/" + surveyId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
@@ -131,7 +131,7 @@ public class SurveyApiClient {
 
     // GET /api/surveys/completeResults/{surveyId} - Obtener resultados completos (ADMIN)
     public String getCompleteResults(String surveyId) throws IOException, InterruptedException {
-        String url = surveysHost + API_SURVEYS + "/completeResults/" + surveyId;
+        String url = surveysHost + API_SURVEYS + "/responses/completeResults/" + surveyId;
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
