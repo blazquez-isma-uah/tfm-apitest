@@ -3,6 +3,7 @@ package com.tfm.bandas;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URLEncoder;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.time.Instant;
@@ -205,4 +206,16 @@ public class Utils {
     public static String encode(String s) {
         return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
+
+    public static String getCompleteHttpResponse(HttpResponse<String> response) {
+        StringBuilder pretty = new StringBuilder();
+        pretty.append("Status: ").append(response.statusCode()).append("\n");
+        pretty.append("Headers:\n");
+        Set<String> allowed = Set.of("date", "content-type", "etag");
+        response.headers().map().entrySet().stream()
+                .filter(e -> allowed.contains(e.getKey().toLowerCase(Locale.ROOT)))
+                .forEach(e -> pretty.append("  ").append(e.getKey()).append(": ").append(String.join(", ", e.getValue())).append("\n"));
+        pretty.append("\nBody:\n").append(prettyPrintJson(response.body()));
+        return pretty.toString();
+     }
 }

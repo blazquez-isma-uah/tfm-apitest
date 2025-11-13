@@ -7,6 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import static com.tfm.bandas.Utils.API_SURVEYS;
+import static com.tfm.bandas.Utils.getCompleteHttpResponse;
 
 public class SurveyApiClient {
 
@@ -44,7 +45,7 @@ public class SurveyApiClient {
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
         HttpRequest request = baseRequest(url)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // GET /api/surveys/{surveyId} - Obtener encuesta por ID (ADMIN, MUSICIAN)
@@ -53,52 +54,52 @@ public class SurveyApiClient {
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // DELETE /api/surveys/{surveyId} - Eliminar encuesta (ADMIN)
-    public String deleteSurvey(String surveyId) throws IOException, InterruptedException {
+    public String deleteSurvey(String surveyId, int headerVersion) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/" + surveyId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .DELETE().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // PUT /api/surveys/{surveyId} - Actualizar encuesta (ADMIN)
-    public String updateSurvey(String surveyId, String jsonBody) throws IOException, InterruptedException {
+    public String updateSurvey(String surveyId, String jsonBody, int headerVersion) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/" + surveyId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // POST /api/surveys/{surveyId}/open - Abrir encuesta (ADMIN)
-    public String openSurvey(String surveyId) throws IOException, InterruptedException {
+    public String openSurvey(String surveyId, int headerVersion) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/" + surveyId + "/open";
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .POST(HttpRequest.BodyPublishers.noBody()).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // POST /api/surveys/{surveyId}/close - Cerrar encuesta (ADMIN)
-    public String closeSurvey(String surveyId) throws IOException, InterruptedException {
+    public String closeSurvey(String surveyId, int headerVersion) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/" + surveyId + "/close";
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .POST(HttpRequest.BodyPublishers.noBody()).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // POST /api/surveys/{surveyId}/cancel - Cancelar encuesta (ADMIN)
-    public String cancelSurvey(String surveyId) throws IOException, InterruptedException {
+    public String cancelSurvey(String surveyId, int headerVersion) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/" + surveyId + "/cancel";
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .POST(HttpRequest.BodyPublishers.noBody()).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // GET /api/surveys/listOpen/{eventId} - Listar encuestas abiertas por evento (ADMIN, MUSICIAN)
@@ -107,7 +108,7 @@ public class SurveyApiClient {
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // GET /api/surveys/listAll/{eventId} - Listar todas las encuestas por evento (ADMIN, MUSICIAN)
@@ -116,7 +117,7 @@ public class SurveyApiClient {
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // GET /api/surveys/search - Buscar encuestas (ADMIN, MUSICIAN)
@@ -125,19 +126,19 @@ public class SurveyApiClient {
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // ==================== Endpoints de Respuestas a Encuestas ====================
 
     // POST /api/surveys/responses/{surveyId} - Responder a encuesta (ADMIN, MUSICIAN)
-    public String respondToSurvey(String surveyId, String jsonBody) throws IOException, InterruptedException {
+    public String respondToSurvey(String surveyId, int headerVersion, String jsonBody) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/responses/" + surveyId;
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // GET /api/surveys/responses/yesNoMaybeResults/{surveyId} - Obtener resultados Yes/No/Maybe (ADMIN)
@@ -146,7 +147,7 @@ public class SurveyApiClient {
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // GET /api/surveys/responses/completeResults/{surveyId} - Obtener resultados completos (ADMIN)
@@ -155,7 +156,7 @@ public class SurveyApiClient {
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // GET /api/surveys/responses/{surveyId}/me - Obtener mi respuesta a encuesta (ADMIN, MUSICIAN)
@@ -164,47 +165,47 @@ public class SurveyApiClient {
         System.out.println("URL: " + url);
         HttpRequest request = baseRequest(url)
                 .GET().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // PUT /api/surveys/responses/{surveyId}/me - Actualizar mi respuesta a encuesta (ADMIN, MUSICIAN)
-    public String updateMySurveyResponse(String surveyId, String jsonBody) throws IOException, InterruptedException {
+    public String updateMySurveyResponse(String surveyId, int headerVersion, String jsonBody) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/responses/" + surveyId + "/me";
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // DELETE /api/surveys/responses/{surveyId}/me - Eliminar mi respuesta a encuesta (ADMIN, MUSICIAN)
-    public String deleteMySurveyResponse(String surveyId) throws IOException, InterruptedException {
+    public String deleteMySurveyResponse(String surveyId, int headerVersion) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/responses/" + surveyId + "/me";
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .DELETE().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // --------------------- Endpoints de Respuestas para ADMIN ---------------------
 
     // PUT /api/surveys/responses/{surveyId}/user/{targetUserId} - Actualizar respuesta de usuario a encuesta (ADMIN)
-    public String updateUserSurveyResponse(String surveyId, String targetUserId, String jsonBody) throws IOException, InterruptedException {
+    public String updateUserSurveyResponse(String surveyId, String targetUserId, int headerVersion, String jsonBody) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/responses/" + surveyId + "/user/" + targetUserId;
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
     // DELETE /api/surveys/responses/{surveyId}/user/{targetUserId} - Eliminar respuesta de usuario a encuesta (ADMIN)
-    public String deleteUserSurveyResponse(String surveyId, String targetUserId) throws IOException, InterruptedException {
+    public String deleteUserSurveyResponse(String surveyId, String targetUserId, int headerVersion) throws IOException, InterruptedException {
         String url = surveysHost + API_SURVEYS + "/responses/" + surveyId + "/user/" + targetUserId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .DELETE().build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        return getCompleteHttpResponse(client.send(request, HttpResponse.BodyHandlers.ofString()));
     }
 
 

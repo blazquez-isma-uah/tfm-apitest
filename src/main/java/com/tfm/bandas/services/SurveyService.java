@@ -55,8 +55,8 @@ public class SurveyService {
      * Eliminar una encuesta (requiere rol ADMIN)
      * @param surveyId ID de la encuesta
      */
-    public String deleteSurvey(String surveyId) throws Exception {
-        return client.deleteSurvey(surveyId);
+    public String deleteSurvey(String surveyId, int headerVersion) throws Exception {
+        return client.deleteSurvey(surveyId, headerVersion);
     }
 
     /**
@@ -68,7 +68,7 @@ public class SurveyService {
      * @param closesAt Nueva fecha/hora de cierre en formato ISO-8601
      */
     public String updateSurvey(String surveyId, String title, String description,
-                               String opensAt, String closesAt) throws Exception {
+                               String opensAt, String closesAt, int headerVersion) throws Exception {
         StringBuilder jsonBody = new StringBuilder();
         jsonBody.append("{\n");
         jsonBody.append("  \"title\": \"").append(title).append("\"");
@@ -82,31 +82,31 @@ public class SurveyService {
             jsonBody.append(",\n  \"closesAt\": \"").append(closesAt).append("\"");
         }
         jsonBody.append("\n}");
-        return client.updateSurvey(surveyId, jsonBody.toString());
+        return client.updateSurvey(surveyId, jsonBody.toString(), headerVersion);
     }
 
     /**
      * Abrir una encuesta para que los usuarios puedan responder (requiere rol ADMIN)
      * @param surveyId ID de la encuesta
      */
-    public String openSurvey(String surveyId) throws Exception {
-        return client.openSurvey(surveyId);
+    public String openSurvey(String surveyId, int headerVersion) throws Exception {
+        return client.openSurvey(surveyId, headerVersion);
     }
 
     /**
      * Cerrar una encuesta para que no se acepten más respuestas (requiere rol ADMIN)
      * @param surveyId ID de la encuesta
      */
-    public String closeSurvey(String surveyId) throws Exception {
-        return client.closeSurvey(surveyId);
+    public String closeSurvey(String surveyId, int headerVersion) throws Exception {
+        return client.closeSurvey(surveyId, headerVersion);
     }
 
     /**
      * Cancelar una encuesta (requiere rol ADMIN)
      * @param surveyId ID de la encuesta
      */
-    public String cancelSurvey(String surveyId) throws Exception {
-        return client.cancelSurvey(surveyId);
+    public String cancelSurvey(String surveyId, int headerVersion) throws Exception {
+        return client.cancelSurvey(surveyId, headerVersion);
     }
 
     /**
@@ -181,7 +181,7 @@ public class SurveyService {
      * @param answer Respuesta: "YES", "NO", o "MAYBE"
      * @param comment Comentario adicional (opcional)
      */
-    public String respondToSurvey(String surveyId, String answer, String comment) throws Exception {
+    public String respondToSurvey(String surveyId, String answer, String comment, int headerVersion) throws Exception {
         StringBuilder jsonBody = new StringBuilder();
         jsonBody.append("{\n");
         jsonBody.append("  \"answer\": \"").append(answer).append("\"");
@@ -192,7 +192,7 @@ public class SurveyService {
 
         jsonBody.append("\n}");
 
-        return client.respondToSurvey(surveyId, jsonBody.toString());
+        return client.respondToSurvey(surveyId, headerVersion, jsonBody.toString());
     }
 
     /**
@@ -225,7 +225,7 @@ public class SurveyService {
      * @param answer Nueva respuesta: "YES", "NO", o "MAYBE"
      * @param comment Nuevo comentario adicional (opcional)
      */
-    public String updateMySurveyResponse(String surveyId, String answer, String comment) throws Exception {
+    public String updateMySurveyResponse(String surveyId, String answer, String comment, int headerVersion) throws Exception {
         StringBuilder jsonBody = new StringBuilder();
         jsonBody.append("{\n");
         jsonBody.append("  \"answer\": \"").append(answer).append("\"");
@@ -236,15 +236,15 @@ public class SurveyService {
 
         jsonBody.append("\n}");
 
-        return client.updateMySurveyResponse(surveyId, jsonBody.toString());
+        return client.updateMySurveyResponse(surveyId, headerVersion, jsonBody.toString());
     }
 
     /**
      * Eliminar mi respuesta a una encuesta específica
      * @param surveyId ID de la encuesta
      */
-    public String deleteMySurveyResponse(String surveyId) throws Exception {
-        return client.deleteMySurveyResponse(surveyId);
+    public String deleteMySurveyResponse(String surveyId, int headerVersion) throws Exception {
+        return client.deleteMySurveyResponse(surveyId, headerVersion);
     }
 
     /**
@@ -254,7 +254,7 @@ public class SurveyService {
      * @param answer Nueva respuesta: "YES", "NO", o "MAYBE"
      * @param comment Nuevo comentario adicional (opcional)
      */
-    public String updateUserSurveyResponse(String surveyId, String userId, String answer, String comment) throws Exception {
+    public String updateUserSurveyResponse(String surveyId, String userId, String answer, String comment, int headerVersion) throws Exception {
         StringBuilder jsonBody = new StringBuilder();
         jsonBody.append("{\n");
         jsonBody.append("  \"answer\": \"").append(answer).append("\"");
@@ -265,7 +265,7 @@ public class SurveyService {
 
         jsonBody.append("\n}");
 
-        return client.updateUserSurveyResponse(surveyId, userId, jsonBody.toString());
+        return client.updateUserSurveyResponse(surveyId, userId, headerVersion, jsonBody.toString());
     }
 
     /**
@@ -273,8 +273,8 @@ public class SurveyService {
      * @param surveyId ID de la encuesta
      * @param userId ID del usuario
      */
-    public String deleteUserSurveyResponse(String surveyId, String userId) throws Exception {
-        return client.deleteUserSurveyResponse(surveyId, userId);
+    public String deleteUserSurveyResponse(String surveyId, String userId, int headerVersion) throws Exception {
+        return client.deleteUserSurveyResponse(surveyId, userId, headerVersion);
     }
 
 }
