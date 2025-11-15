@@ -74,7 +74,7 @@ public class UserService {
 
     public String updateUser(String id, String firstName, String lastName,
                              String secondLastName, String email, String birthDate,
-                             String bandJoinDate, String phone, String notes, String profilePictureUrl) throws Exception {
+                             String bandJoinDate, String phone, String notes, String profilePictureUrl, int headerVersion) throws Exception {
 
         String jsonBody = String.format("""
         {
@@ -89,19 +89,19 @@ public class UserService {
           "profilePictureUrl": "%s"        }
         """, email, firstName, lastName, secondLastName, birthDate, bandJoinDate,
                 phone, notes, profilePictureUrl);
-        return client.updateUser(id, jsonBody);
+        return client.updateUser(id, jsonBody, headerVersion);
     }
 
-    public String enableUser(String id) throws Exception {
-        return client.enableUser(id);
+    public String enableUser(String id, int headerVersion) throws Exception {
+        return client.enableUser(id, headerVersion);
     }
 
-    public String disableUser(String id) throws Exception {
-        return client.disableUser(id);
+    public String disableUser(String id, int headerVersion) throws Exception {
+        return client.disableUser(id, headerVersion);
     }
 
-    public String deleteUser(String id) throws Exception {
-        return client.deleteUser(id);
+    public String deleteUser(String id, int headerVersion) throws Exception {
+        return client.deleteUser(id, headerVersion);
     }
 
     public String searchUsers(String firstName, String lastName, String secondLastName, String email, Boolean active, Long instrumentId,
@@ -148,8 +148,18 @@ public class UserService {
         return client.createInstrument(jsonBody);
     }
 
-    public String deleteInstrument(String id) throws Exception {
-        return client.deleteInstrument(id);
+    public String updateInstrument(String id, String instrumentName, String voice, int headerVersion) throws Exception {
+        String jsonBody = String.format("""
+        {
+          "instrumentName": "%s",
+          "voice": "%s"
+        }
+        """, instrumentName, voice);
+        return client.updateInstrument(id, jsonBody, headerVersion);
+    }
+
+    public String deleteInstrument(String id, int headerVersion) throws Exception {
+        return client.deleteInstrument(id, headerVersion);
     }
 
     public String searchInstruments(String instrumentName, String voice, Integer page, Integer size, String sort) throws Exception {
@@ -162,17 +172,17 @@ public class UserService {
         return client.searchInstruments(buildQuery(params));
     }
 
-    public String updateUserInstruments(String id, List<String> instruments) throws Exception {
+    public String updateUserInstruments(String id, List<String> instruments, int headerVersion) throws Exception {
         String instrumentsJson = toJsonArray(instruments, false);
-        return client.updateUserInstruments(id, instrumentsJson);
+        return client.updateUserInstruments(id, instrumentsJson, headerVersion);
     }
 
-    public String assignInstrumentToUser(String userId, String instrumentId) throws Exception {
-        return client.assignInstrumentToUser(userId, instrumentId);
+    public String assignInstrumentToUser(String userId, String instrumentId, int headerVersion) throws Exception {
+        return client.assignInstrumentToUser(userId, instrumentId, headerVersion);
     }
 
-    public String removeInstrumentFromUser(String userId, String instrumentId) throws Exception {
-        return client.removeInstrumentFromUser(userId, instrumentId);
+    public String removeInstrumentFromUser(String userId, String instrumentId, int headerVersion) throws Exception {
+        return client.removeInstrumentFromUser(userId, instrumentId, headerVersion);
     }
 
     // ==================== ROLES ====================
@@ -210,17 +220,17 @@ public class UserService {
         return client.listUserRolesByUsername(username);
     }
 
-    public String updateUserRoles(String userId, List<String> roleNames) throws Exception {
+    public String updateUserRoles(String userId, List<String> roleNames, int headerVersion) throws Exception {
         String rolesJson = toJsonArray(roleNames, true);
-        return client.updateUserRoles(userId, rolesJson);
+        return client.updateUserRoles(userId, rolesJson, headerVersion);
     }
 
-    public String assignRoleToUser(String userId, String roleName) throws Exception {
-        return client.assignRoleToUser(userId, roleName);
+    public String assignRoleToUser(String userId, String roleName, int headerVersion) throws Exception {
+        return client.assignRoleToUser(userId, roleName, headerVersion);
     }
 
-    public String removeRoleFromUser(String userId, String roleName) throws Exception {
-        return client.removeRoleFromUser(userId, roleName);
+    public String removeRoleFromUser(String userId, String roleName, int headerVersion) throws Exception {
+        return client.removeRoleFromUser(userId, roleName, headerVersion);
     }
 
 }

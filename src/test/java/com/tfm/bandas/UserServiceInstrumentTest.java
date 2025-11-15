@@ -42,10 +42,22 @@ public class UserServiceInstrumentTest {
     }
 
     @Test
+    public void UpdateInstrument() throws Exception {
+        String instrumentId = "24";
+        String name = "Flauta Transversal";
+        String type = "2";
+        int ifMatchHeaderVersion = 1; // Current version of the instrument
+        String result = userService.updateInstrument(instrumentId, name, type, ifMatchHeaderVersion);
+        System.out.println(prettyPrintJson(result));
+    }
+
+    @Test
     public void DeleteInstrument() throws Exception {
         String instrumentId = "24";
 
-        String result = userService.deleteInstrument(instrumentId);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.deleteInstrument(instrumentId, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -66,7 +78,9 @@ public class UserServiceInstrumentTest {
         String userId = "15";
         List<String> instruments = List.of("9", "10", "22");
 
-        String result = userService.updateUserInstruments(userId, instruments);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.updateUserInstruments(userId, instruments, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -74,7 +88,10 @@ public class UserServiceInstrumentTest {
     public void AssignInstrumentToUser() throws Exception {
         String userId = "15";
         String instrumentId = "14";
-        String result = userService.assignInstrumentToUser(userId, instrumentId);
+
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.assignInstrumentToUser(userId, instrumentId, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -82,7 +99,10 @@ public class UserServiceInstrumentTest {
     public void RemoveInstrumentFromUser() throws Exception {
         String userId = "15";
         String instrumentId = "22";
-        String result = userService.removeInstrumentFromUser(userId, instrumentId);
+
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.removeInstrumentFromUser(userId, instrumentId, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 }

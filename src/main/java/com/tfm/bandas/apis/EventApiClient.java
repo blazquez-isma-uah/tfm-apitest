@@ -46,19 +46,19 @@ public class EventApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String updateEvent(String eventId, String jsonBody) throws IOException, InterruptedException {
+    public String updateEvent(String eventId, String jsonBody, int headerVersion) throws IOException, InterruptedException {
         String url = eventsHost + API_EVENTS + "/" + eventId;
         System.out.println("URL: " + url);
         System.out.println("Cuerpo de la solicitud: " + jsonBody);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String deleteEvent(String eventId) throws IOException, InterruptedException {
+    public String deleteEvent(String eventId, int headerVersion) throws IOException, InterruptedException {
         String url = eventsHost + API_EVENTS + "/" + eventId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }

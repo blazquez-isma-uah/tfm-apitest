@@ -96,8 +96,11 @@ public class UserServiceTest {
         String phone = "123456789";
         String notes = "Usuario actualizado desde test";
         String profilePictureUrl = "http://example.com/profile1.jpg";
+
+        int ifMatchHeaderVersion = 0; // Current version
+
         String result = userService.updateUser(userId, firstName, lastName, secondLastName,
-                email, birthDate, bandJoinDate, phone, notes, profilePictureUrl);
+                email, birthDate, bandJoinDate, phone, notes, profilePictureUrl, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -105,7 +108,9 @@ public class UserServiceTest {
     public void EnableUser() throws Exception {
         String userId = "24";
 
-        String result = userService.enableUser(userId);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.enableUser(userId, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -113,7 +118,9 @@ public class UserServiceTest {
     public void DisableUser() throws Exception {
         String userId = "24";
 
-        String result = userService.disableUser(userId);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.disableUser(userId, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -121,7 +128,9 @@ public class UserServiceTest {
     public void DeleteUser() throws Exception {
         String userId = "23";
 
-        String result = userService.deleteUser(userId);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.deleteUser(userId, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 

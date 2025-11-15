@@ -41,7 +41,10 @@ public class EventServiceTest {
         String status = "CANCELED"; // SCHEDULED, CANCELED, POSTPONED
         String visibility = "PUBLIC"; // PUBLIC, BAND_ONLY
 
-        String result = eventService.updateEvent(id, title, description, location, localStart, localEnd, timeZone, type, status, visibility);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = eventService.updateEvent(id, title, description, location, localStart,
+                localEnd, timeZone, type, status, visibility, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -49,7 +52,9 @@ public class EventServiceTest {
     public void DeleteEvent() throws Exception {
         String id = "64259397-5ff2-49a7-9349-286f0fa37aaf";
 
-        String result = eventService.deleteEvent(id);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = eventService.deleteEvent(id, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 

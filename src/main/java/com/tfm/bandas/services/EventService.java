@@ -35,7 +35,7 @@ public class EventService {
 
     public String updateEvent(String id, String title, String description, String location,
                               String localStart, String localEnd, String timeZone,
-                              String type, String status, String visibility) throws Exception {
+                              String type, String status, String visibility, int headerVersion) throws Exception {
         String jsonBody = String.format("""
         {
           "title": "%s",
@@ -49,11 +49,11 @@ public class EventService {
           "visibility": "%s"
         }
         """, title, description, location, localStart, localEnd, timeZone, type, status, visibility);
-        return client.updateEvent(id, jsonBody);
+        return client.updateEvent(id, jsonBody, headerVersion);
     }
 
-    public String deleteEvent(String id) throws Exception {
-        return client.deleteEvent(id);
+    public String deleteEvent(String id, int headerVersion) throws Exception {
+        return client.deleteEvent(id, headerVersion);
     }
 
     public String getEventById(String id) throws Exception {

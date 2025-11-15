@@ -80,32 +80,35 @@ public class UserApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String updateUser(String userId, String jsonBody) throws IOException, InterruptedException {
+    public String updateUser(String userId, String jsonBody, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_USERS + "/" + userId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String enableUser(String userId) throws IOException, InterruptedException {
+    public String enableUser(String userId, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_USERS + "/" + userId + "/enable";
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url).PUT(HttpRequest.BodyPublishers.noBody()).build();
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
+                .PUT(HttpRequest.BodyPublishers.noBody()).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String disableUser(String userId) throws IOException, InterruptedException {
+    public String disableUser(String userId, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_USERS + "/" + userId + "/disable";
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url).PUT(HttpRequest.BodyPublishers.noBody()).build();
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
+                .PUT(HttpRequest.BodyPublishers.noBody()).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String deleteUser(String userId) throws IOException, InterruptedException {
+    public String deleteUser(String userId, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_USERS + "/" + userId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url).DELETE().build();
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
+                .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
@@ -146,10 +149,19 @@ public class UserApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String deleteInstrument(String instrumentId) throws IOException, InterruptedException {
+    public String updateInstrument(String instrumentId, String jsonBody, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_INSTRUMENTS + "/" + instrumentId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url).DELETE().build();
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    }
+
+    public String deleteInstrument(String instrumentId, int headerVersion) throws IOException, InterruptedException {
+        String url = usersHost + API_INSTRUMENTS + "/" + instrumentId;
+        System.out.println("URL: " + url);
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
+                .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
@@ -160,26 +172,26 @@ public class UserApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String updateUserInstruments(String userId, String jsonBody) throws IOException, InterruptedException {
+    public String updateUserInstruments(String userId, String jsonBody, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_INSTRUMENTS + "/user/" + userId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String assignInstrumentToUser(String userId, String instrumentId) throws IOException, InterruptedException {
+    public String assignInstrumentToUser(String userId, String instrumentId, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_INSTRUMENTS + "/user/" + userId + "/" + instrumentId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .POST(HttpRequest.BodyPublishers.noBody()).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String removeInstrumentFromUser(String userId, String instrumentId) throws IOException, InterruptedException {
+    public String removeInstrumentFromUser(String userId, String instrumentId, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_INSTRUMENTS + "/user/" + userId + "/" + instrumentId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
@@ -236,26 +248,26 @@ public class UserApiClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String updateUserRoles(String userId, String jsonBody) throws IOException, InterruptedException {
+    public String updateUserRoles(String userId, String jsonBody, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_ROLES + "/user/" + userId;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String assignRoleToUser(String userId, String roleName) throws IOException, InterruptedException {
+    public String assignRoleToUser(String userId, String roleName, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_ROLES + "/user/" + userId + "/" + roleName;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .POST(HttpRequest.BodyPublishers.noBody()).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    public String removeRoleFromUser(String userId, String roleName) throws IOException, InterruptedException {
+    public String removeRoleFromUser(String userId, String roleName, int headerVersion) throws IOException, InterruptedException {
         String url = usersHost + API_ROLES + "/user/" + userId + "/" + roleName;
         System.out.println("URL: " + url);
-        HttpRequest request = baseRequest(url)
+        HttpRequest request = baseRequest(url).header("If-Match", "W/\"" + headerVersion + "\"")
                 .DELETE().build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }

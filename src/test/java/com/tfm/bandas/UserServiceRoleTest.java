@@ -74,7 +74,9 @@ public class UserServiceRoleTest {
         String userId = "21";
         List<String> roleNames = List.of("MUSICIAN", "ADMIN");
 
-        String result = userService.updateUserRoles(userId, roleNames);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.updateUserRoles(userId, roleNames, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -83,7 +85,9 @@ public class UserServiceRoleTest {
         String userId = "20";
         String roleName = "MUSICIAN";
 
-        String result = userService.assignRoleToUser(userId, roleName);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.assignRoleToUser(userId, roleName, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 
@@ -92,7 +96,9 @@ public class UserServiceRoleTest {
         String userId = "21";
         String roleName = "ADMIN";
 
-        String result = userService.removeRoleFromUser(userId, roleName);
+        int ifMatchHeaderVersion = 0; // Current version
+
+        String result = userService.removeRoleFromUser(userId, roleName, ifMatchHeaderVersion);
         System.out.println(prettyPrintJson(result));
     }
 }
